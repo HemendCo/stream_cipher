@@ -25,7 +25,7 @@ this package initially comes with a http client adapter for `Dio` library.
 >
 >>1.in this method only the body of the request is encrypted.
 >>
->>2.in this method only the body of the request is encrypted.
+>>2.in this method only the body of the response is decrypted.
 >>
 >>3.the header of request is not encrypted. to deform the header of request, you can extend one of `IByteDataEncrypter`s and override the `alterHeader` method to do so.
 
