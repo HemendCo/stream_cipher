@@ -1,19 +1,23 @@
+// ignore_for_file: lines_longer_than_80_chars, prefer_foreach
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http_request_cipher/http_request_cipher.dart';
+import 'package:http_request_cipher/src/client_adapters/extensions/request_encrypter.dart';
+import 'package:http_request_cipher/src/client_adapters/extensions/response_decrypter.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Encryption Tests', () {
-    const String kRSAPublicKey = '''-----BEGIN PUBLIC KEY-----
+    const kRSAPublicKey = '''-----BEGIN PUBLIC KEY-----
 MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHJnzr0orb3n7PF2/uhQUMpUpxuS
 ZNb4Xh7GPrWMWUZNxBdWYPf0P7A56bvqRNoe8oYDYF2nd6HAkglCp2oN1j6nDFaV
 b3mU94CiuGV2U5/0+lKtdkbv+lCTt9+PExoVWJEXlybjllLZuKboZNdJUpBjt0ZU
 cCL0KXjtjrMXngJBAgMBAAE=
 -----END PUBLIC KEY-----''';
-    const String kRSAPrivateKey = '''-----BEGIN RSA PRIVATE KEY-----
+    const kRSAPrivateKey = '''-----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgHJnzr0orb3n7PF2/uhQUMpUpxuSZNb4Xh7GPrWMWUZNxBdWYPf0
 P7A56bvqRNoe8oYDYF2nd6HAkglCp2oN1j6nDFaVb3mU94CiuGV2U5/0+lKtdkbv
 +lCTt9+PExoVWJEXlybjllLZuKboZNdJUpBjt0ZUcCL0KXjtjrMXngJBAgMBAAEC
@@ -29,8 +33,8 @@ UUjoGc0DopvF7SqALR+lWqndCgKXWb35HuqBdKAUyvp5QVY8/s+DgKIDXgyRHKvd
 Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
 -----END RSA PRIVATE KEY-----''';
 
-    Uint8List testString = Uint8List(0);
-    const EncryptStreamMeta streamMeta = EncryptStreamMeta(
+    var testString = Uint8List(0);
+    const streamMeta = EncryptStreamMeta(
       ending: '#ENDING#',
       separator: '#SEPARATOR#',
     );
@@ -57,11 +61,13 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
       () async {
         final encrypter = NoEncryptionByteDataEncrypter();
         final decrypter = NoEncryptionByteDataDecrypter();
-        final List<int> buffer = [];
+        final buffer = <int>[];
         await for (final part in decrypter.alterDecryptStream(
           encrypter.alterEncryptStream(
             Stream.fromIterable(
-              testString.breakToPieceOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
+              testString
+                  .sliceToPiecesOfSize(1024)
+                  .map((e) => Uint8List.fromList(e.toList())),
             ),
             streamMeta: streamMeta,
           ),
@@ -93,11 +99,13 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
           key: encrypter.key,
           iv: encrypter.iv,
         );
-        final List<int> buffer = [];
+        final buffer = <int>[];
         await for (final part in decrypter.alterDecryptStream(
           encrypter.alterEncryptStream(
             Stream.fromIterable(
-              testString.breakToPieceOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
+              testString
+                  .sliceToPiecesOfSize(1024)
+                  .map((e) => Uint8List.fromList(e.toList())),
             ),
             streamMeta: streamMeta,
           ),
@@ -114,8 +122,8 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
       () {
         final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicKey);
         final decrypter = RSAByteDataDecrypter.fromString(kRSAPrivateKey);
-        final List<int> buffer = [];
-        for (final i in testString.breakToPieceOfSize(50)) {
+        final buffer = <int>[];
+        for (final i in testString.sliceToPiecesOfSize(50)) {
           final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
           final decrypted = decrypter.decrypt(encrypted);
           buffer.addAll(decrypted);
@@ -128,11 +136,13 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
       () async {
         final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicKey);
         final decrypter = RSAByteDataDecrypter.fromString(kRSAPrivateKey);
-        final List<int> buffer = [];
+        final buffer = <int>[];
         await for (final part in decrypter.alterDecryptStream(
           encrypter.alterEncryptStream(
             Stream.fromIterable(
-              testString.breakToPieceOfSize(50).map((e) => Uint8List.fromList(e.toList())),
+              testString
+                  .sliceToPiecesOfSize(50)
+                  .map((e) => Uint8List.fromList(e.toList())),
             ),
             streamMeta: streamMeta,
           ),

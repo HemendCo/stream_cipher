@@ -1,12 +1,12 @@
 library http_request_cipher.cipher_models;
 
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:blowfish_ecb/blowfish_ecb.dart';
-import 'package:encrypt/encrypt.dart';
-import 'package:pointycastle/asymmetric/api.dart';
+import 'dart:io' show File, gzip;
+import 'dart:typed_data' show Uint8List;
+import 'package:encrypt/encrypt.dart'
+    show AES, Encrypter, IV, Key, RSA, RSAKeyParser;
+import 'package:pointycastle/asymmetric/api.dart' show RSAPublicKey;
 
-import '../http_request_cipher.dart';
+import '../http_request_cipher.dart' show IByteDataEncrypter;
 
 class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   @override
@@ -19,16 +19,20 @@ class AESByteDataEncrypter extends IByteDataEncrypter {
   /// it is a `two-way` key.
   final Key key;
 
-  /// AES-IV is a initialization vector that is used to encrypt and decrypt data.
+  /// AES-IV is a initialization vector that is used to encrypt and decrypt data
   final IV iv;
 
   /// AES Encrypter instance that is used to encrypt data.
   final Encrypter _encrypter;
 
   /// A [IByteDataEncrypter] that encrypts data using AES.
-  AESByteDataEncrypter({required this.key, required this.iv}) : _encrypter = Encrypter(AES(key));
+  AESByteDataEncrypter({
+    required this.key,
+    required this.iv,
+  }) : _encrypter = Encrypter(AES(key));
 
-  /// create [AESByteDataEncrypter] instance with utf8 [String] of [Key] and [IV]
+  /// create [AESByteDataEncrypter] instance with
+  /// utf8 [String] of [Key] and [IV]
   factory AESByteDataEncrypter.fromString({
     required String key,
     required String iv,
@@ -69,9 +73,11 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   /// RSA Encrypter instance that is used to encrypt data.
   final Encrypter _encrypter;
   RSAByteDataEncrypter({required this.publicKey})
-      : _encrypter = Encrypter(RSA(
-          publicKey: publicKey,
-        ));
+      : _encrypter = Encrypter(
+          RSA(
+            publicKey: publicKey,
+          ),
+        );
 
   /// parse a string into [RSAPublicKey] object
   factory RSAByteDataEncrypter.fromString(String key) {
@@ -80,11 +86,6 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
       publicKey: parser.parse(key) as RSAPublicKey,
     );
   }
-
-  // /// load public key from an asset file.
-  // static Future<RSAByteDataEncrypter> loadPublicKeyFromAsset(String assetId) async {
-  //   return RSAByteDataEncrypter.fromString(await rootBundle.loadString(assetId));
-  // }
 
   /// loads public key from a file in async mode.
   static Future<RSAByteDataEncrypter> fromFile(String fileAddress) async {
@@ -109,30 +110,7 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   }
 }
 
-class BlowFishByteDataEncrypter extends IByteDataEncrypter {
-  // final key = Uint8List.fromList([15, 15, 15, 15, 15, 15, 15, 15, 15]);
-  final BlowfishECB encoder;
-  BlowFishByteDataEncrypter({required Uint8List key})
-      : assert(key.length < 56, "key size cannot be bigger than 56 bytes"),
-        encoder = BlowfishECB(key);
-  factory BlowFishByteDataEncrypter.fromString(String key) =>
-      BlowFishByteDataEncrypter(key: Uint8List.fromList(key.codeUnits));
-  @override
-  Uint8List encrypt(Uint8List data) {
-    int padLength = 0;
-    if (data.length % 8 != 0) {
-      padLength = (8 - (data.length % 8));
-      data = Uint8List(data.length + padLength);
-    }
-    if (padLength == 4) {
-      print(data);
-    }
-    return Uint8List.fromList([padLength, ...encoder.encode(data)]);
-    // return Future.value(Uint8List.fromList(gzip.encoder.convert(data)));
-  }
-}
-
-class GZipByteDataEncrypter extends IByteDataEncrypter {
+class GZipByteDataEncoder extends IByteDataEncrypter {
   @override
   Uint8List encrypt(Uint8List data) {
     return Uint8List.fromList(gzip.encoder.convert(data));

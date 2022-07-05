@@ -5,12 +5,19 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 
 import '../../http_request_cipher.dart';
-import '../helper_types.dart';
+import 'extensions/request_encrypter.dart';
+import 'extensions/response_decrypter.dart';
 
-/// A [Dio] adapter that encrypts and decrypts data using a [IByteDataEncrypter].
-/// The [IByteDataEncrypter] is used to encrypt the data while sending it to the server.
-/// This adapter needs a base [HttpClientAdapter] to fork from it
-/// [useBase64] flag will be used to encode data to base64 string before encoding it to bytes.
+/// A [Dio] adapter that encrypts and decrypts data
+/// using a [IByteDataEncrypter].
+///
+/// The [IByteDataEncrypter] is used to encrypt the data while sending
+/// it to the server.
+///
+/// This adapter needs a base [HttpClientAdapter] to fork from it.
+///
+/// [useBase64] flag will be used to encode data to base64 string before
+/// encoding it to bytes.
 class CypherDioHttpAdapter extends HttpClientAdapter {
   /// [HttpClientAdapter] there will be an instance of this adapter on []
   final HttpClientAdapter _baseAdapter;
@@ -51,17 +58,22 @@ class CypherDioHttpAdapter extends HttpClientAdapter {
   /// [CypherDioHttpAdapter] instance. will proxy requests and and responses to
   /// encrypt request body and decrypt response body.
   ///
-  /// - `baseAdapter` [HttpClientAdapter] there will be an instance of this adapter on []
+  /// - `baseAdapter` [HttpClientAdapter] there will be an instance
+  /// of this adapter on []
   ///
   /// - `encrypter` [IByteDataEncrypter] used to encrypt data.
   ///
-  /// - `useBase64` A flag to use Base64String instead of ByteArray before encrypting
+  /// - `useBase64` A flag to use Base64String instead of ByteArray
+  /// before encrypting
   /// parts of the data. remember the request will still be in bytes.
   ///
   ///
-  /// - `maximumPartSize` of byte data passing to [IByteDataEncrypter] to encrypt.
+  /// - `maximumPartSize` of byte data
+  /// passing to [IByteDataEncrypter] to encrypt.
+  ///
   /// remember this value is maximum part size and data parts can be
   /// smaller than this value.
+  ///
   /// this value may need to be adjusted depending on the [IByteDataEncrypter]
   /// for example if you are using [RSAByteDataEncrypter] and you have to lower
   /// this value to avoid `memory`,`cypher Input data too large`,etc. issues.
@@ -81,25 +93,43 @@ class CypherDioHttpAdapter extends HttpClientAdapter {
   void close({bool force = false}) => _baseAdapter.close(force: force);
 
   @override
-  Future<ResponseBody> fetch(RequestOptions options, Stream<Uint8List>? requestStream, Future? cancelFuture) async {
-    final outputOptions = options.copyWith(headers: {
-      ...options.headers,
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future? cancelFuture,
+  ) async {
+    var outputOptions = options.copyWith(
+      headers: {
+        ...options.headers,
 
-      /// removing `content-length` from header to avoid `content length mismatch` issue.
-      'content-length': null,
-      'type_id': useBase64 ? 1 : 0,
-    });
+        /// removing `content-length` from header to
+        /// avoid `content length mismatch` issue.
+        'content-length': null,
+        'type_id': useBase64 ? 1 : 0,
+      },
+    );
+
+    outputOptions = outputOptions.copyWith(
+      headers: encrypter.alterHeader(
+        outputOptions.headers,
+      ),
+    );
     final response = await _baseAdapter.fetch(
-        outputOptions,
-        requestStream != null
-            ? encrypter.alterEncryptStream(
-                requestStream,
-                streamMeta: streamMeta,
-                maxBlocSize: maximumPartSize,
-                useBase64: useBase64,
-              )
-            : requestStream,
-        cancelFuture);
+      outputOptions,
+
+      /// alternate request body stream with encrypter.
+      requestStream != null
+          ? encrypter.alterEncryptStream(
+              requestStream,
+              streamMeta: streamMeta,
+              maxBlocSize: maximumPartSize,
+              useBase64: useBase64,
+            )
+          : requestStream,
+      cancelFuture,
+    );
+
+    /// alternate response body with decrypter.
     return ResponseBody(
       decrypter.alterDecryptStream(
         response.stream,

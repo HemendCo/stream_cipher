@@ -4,14 +4,22 @@ extension ListBreaker<T> on List<T> {
   /// split the list by given sublist
   Iterable<Iterable<T>> splitByPart(List<T> splitter) {
     final parts = <Iterable<T>>[];
-    int start = 0;
-    for (int i = 0; i < length; i++) {
+    if (length < splitter.length) {
+      return [this];
+    }
+    var start = 0;
+    for (var i = 0; i < length; i++) {
       if (this[i] == splitter[0]) {
         if (splitter.length == 1) {
           parts.add(sublist(start, i));
           start = i + 1;
         } else {
-          if (i + splitter.length <= length && sublist(i, i + splitter.length).join('') == splitter.join('')) {
+          if (i + splitter.length <= length &&
+              sublist(
+                    i,
+                    i + splitter.length,
+                  ).join() ==
+                  splitter.join()) {
             parts.add(sublist(start, i));
             start = i + splitter.length;
             i += splitter.length - 1;
@@ -23,10 +31,15 @@ extension ListBreaker<T> on List<T> {
     return parts;
   }
 
-  Iterable<Iterable<T>> breakToPieceOfSize(int pieceSize) {
+  /// will slice the list by given length
+  Iterable<Iterable<T>> sliceToPiecesOfSize(
+    int pieceSize, {
+    bool strict = false,
+    T? fillEmptyWith,
+  }) {
     final result = <Iterable<T>>[];
     var current = <T>[];
-    for (var item in this) {
+    for (final item in this) {
       current.add(item);
       if (current.length == pieceSize) {
         result.add(current);
@@ -34,16 +47,31 @@ extension ListBreaker<T> on List<T> {
       }
     }
     if (current.isNotEmpty) {
-      result.add(current);
+      if (strict) {
+        if (fillEmptyWith == null) {
+          throw Exception(
+            '''size of list ($length) is not a multiple of $pieceSize and no filler passed to fill the empty space try passing `fillEmptyWith: <$T>`''',
+          );
+        }
+        result.add([
+          ...current,
+          ...List<T>.filled(
+            pieceSize - current.length,
+            fillEmptyWith,
+          ),
+        ]);
+      } else {
+        result.add(current);
+      }
     }
     return result;
   }
 
   Iterable<Iterable<T>> breakToPiecesOfSizes(List<int> pieceSizes) {
     final result = <Iterable<T>>[];
-    int pieceIndex = 0;
+    var pieceIndex = 0;
     var current = <T>[];
-    for (var item in this) {
+    for (final item in this) {
       current.add(item);
       if (current.length == pieceSizes[pieceIndex]) {
         pieceIndex++;

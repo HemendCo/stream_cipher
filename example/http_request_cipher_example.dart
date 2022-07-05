@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:http_request_cipher/http_request_cipher.dart';
 import 'package:http_request_cipher/src/client_adapters/dio_client_adapter.dart';
 
+const kRawEchoApiUrl = 'http://0.0.0.0:3000/example/echo_server.php';
 void main() {
   /// run php serve with `php -S 0.0.0.0:3000`
   rrrr();
@@ -19,8 +20,12 @@ void rrrr() {
   );
 
   final dio = Dio()..httpClientAdapter = dioClient;
-  const String url = 'http://0.0.0.0:3000/example/echo_server.php';
-  dio.post(url, data: '{"note":"this will be encrypted"}').then((response) {
+  dio
+      .post(
+    kRawEchoApiUrl,
+    data: '{"note":"this will be encrypted"}',
+  )
+      .then((response) {
     print('Raw request -> Raw response: ${response.data}');
   });
 }
@@ -35,8 +40,12 @@ void errr() {
   );
 
   final dio = Dio()..httpClientAdapter = dioClient;
-  const String url = 'http://0.0.0.0:3000/example/echo_server.php';
-  dio.post(url, data: '{"note":"this will be encrypted"}').then((response) {
+  dio
+      .post(
+    kRawEchoApiUrl,
+    data: '{"note":"this will be encrypted"}',
+  )
+      .then((response) {
     print('Encrypted request -> raw response: ${response.data}');
   });
 }
@@ -51,8 +60,13 @@ void erdr() {
   );
 
   final dio = Dio()..httpClientAdapter = dioClient;
-  const String url = 'http://0.0.0.0:3000/example/echo_server.php';
-  dio.post(url, data: '{"note":"this will be encrypted"}').then((response) {
+
+  dio
+      .post(
+    kRawEchoApiUrl,
+    data: '{"note":"this will be encrypted"}',
+  )
+      .then((response) {
     print('Encrypted request -> decrypted response: ${response.data}');
   });
 }
