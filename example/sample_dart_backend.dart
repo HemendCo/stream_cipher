@@ -11,7 +11,7 @@ import 'http_request_cipher_example.dart';
 Future<HttpServer> dartBackEnd() async {
   final webServer = Router()
     ..post(
-      '/',
+      '/decoded_echo',
       (Request request) async {
         final decrypter = AESByteDataDecrypter.empty();
         final deStream = decrypter.alterDecryptStream(
@@ -24,6 +24,12 @@ Future<HttpServer> dartBackEnd() async {
         final buffer = <int>[];
         await deStream.forEach(buffer.addAll);
         return Response(200, body: String.fromCharCodes(buffer));
+      },
+    )
+    ..post(
+      '/raw_echo',
+      (Request request) async {
+        return Response(200, body: request.read());
       },
     );
   var server = await serve(webServer, '0.0.0.0', kServerPort);
