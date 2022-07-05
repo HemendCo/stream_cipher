@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
-import 'package:stream_cipher/http_request_cipher.dart';
+import 'package:stream_cipher/stream_cipher.dart';
 
 import 'http_request_cipher_example.dart';
 
@@ -32,7 +32,7 @@ Future<HttpServer> dartBackEnd() async {
         return Response(200, body: request.read());
       },
     );
-  var server = await serve(webServer, '0.0.0.0', kServerPort);
+  final server = await serve(webServer, '0.0.0.0', kServerPort);
   print('awaiting for request on port $kServerPort');
   return server;
 }

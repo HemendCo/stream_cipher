@@ -1,5 +1,8 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
-import 'package:stream_cipher/http_request_cipher.dart';
+import 'package:stream_cipher/stream_cipher.dart';
 import 'package:stream_cipher/src/client_adapters/dio_client_adapter.dart';
 
 import 'sample_dart_backend.dart';
@@ -15,7 +18,47 @@ Future<void> main() async {
   errr();
   erdr();
   await erdr2();
+  await ioWriteAndRead();
   server.close(force: true);
+}
+
+final testFile = File('test.test');
+const streamMeta = EncryptStreamMeta(
+  ending: '#ENDING#',
+  separator: '#SEPARATOR#',
+);
+Future<void> ioWriteAndRead() async {
+  final encrypter = AESByteDataEncrypter.randomSecureKey();
+  final decrypter = AESByteDataDecrypter(key: encrypter.key, iv: encrypter.iv);
+  final testData = Stream.fromIterable(
+    '{"note":"this will be encrypted"}'.codeUnits.sliceToPiecesOfSize(
+          kMaxPartSize,
+        ),
+  );
+  final fileWriter = testFile.openWrite();
+  await fileWriter.addStream(
+    encrypter.alterEncryptStream(
+      testData.map(
+        (event) => Uint8List.fromList(
+          event.toList(),
+        ),
+      ),
+      streamMeta: streamMeta,
+    ),
+  );
+  fileWriter.close();
+  final fileReader = testFile.openRead();
+  final decryptedStream = decrypter.alterDecryptStream(
+    fileReader.map(
+      (event) => Uint8List.fromList(
+        event.toList(),
+      ),
+    ),
+    streamMeta: streamMeta,
+  );
+  final buffer = <int>[];
+  await decryptedStream.forEach(buffer.addAll);
+  print('Encrypted and Decrypted IO Task: ${String.fromCharCodes(buffer)}');
 }
 
 void rrrr() {
