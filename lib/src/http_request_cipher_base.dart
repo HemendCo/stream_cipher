@@ -22,3 +22,5 @@ abstract class IByteDataEncrypter {
     Uint8List data,
   );
 }
+
+abstract class NoEncryption {}

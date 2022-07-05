@@ -6,9 +6,10 @@ import 'package:encrypt/encrypt.dart'
     show AES, Encrypted, Encrypter, IV, Key, RSA, RSAKeyParser;
 import 'package:pointycastle/asymmetric/api.dart' show RSAPrivateKey;
 
-import '../http_request_cipher.dart' show IByteDataDecrypter;
+import '../http_request_cipher.dart' show IByteDataDecrypter, NoEncryption;
 
-class NoEncryptionByteDataDecrypter extends IByteDataDecrypter {
+class NoEncryptionByteDataDecrypter extends IByteDataDecrypter
+    implements NoEncryption {
   @override
   Uint8List decrypt(Uint8List data) => data;
 }
