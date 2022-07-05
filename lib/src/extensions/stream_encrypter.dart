@@ -1,10 +1,12 @@
+library http_request_cipher.stream_extensions;
+
 import 'dart:convert' show base64Encode;
 import 'dart:typed_data' show Uint8List;
 
 import '../../../http_request_cipher.dart'
     show EncryptStreamMeta, IByteDataEncrypter, ListBreaker, NoEncryption;
 
-extension RequestEncryptTools on IByteDataEncrypter {
+extension StreamEncryptTools on IByteDataEncrypter {
   Stream<Uint8List> alterEncryptStream(
     Stream<Uint8List> sourceStream, {
     int maxBlocSize = 1024,

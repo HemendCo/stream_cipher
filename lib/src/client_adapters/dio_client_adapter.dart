@@ -5,8 +5,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 
 import '../../http_request_cipher.dart';
-import 'extensions/request_encrypter.dart';
-import 'extensions/response_decrypter.dart';
 
 /// A [Dio] adapter that encrypts and decrypts data
 /// using a [IByteDataEncrypter].
@@ -18,7 +16,7 @@ import 'extensions/response_decrypter.dart';
 ///
 /// [useBase64] flag will be used to encode data to base64 string before
 /// encoding it to bytes.
-class CypherDioHttpAdapter extends HttpClientAdapter {
+class CipherDioHttpAdapter extends HttpClientAdapter {
   /// [HttpClientAdapter] there will be an instance of this adapter on []
   final HttpClientAdapter _baseAdapter;
 
@@ -40,7 +38,7 @@ class CypherDioHttpAdapter extends HttpClientAdapter {
   /// this value may need to be adjusted depending on the [IByteDataEncrypter]
   ///
   /// for example if you are using [RSAByteDataEncrypter] and you have to lower
-  /// this value to avoid `memory`,`cypher Input data too large`,etc. issues.
+  /// this value to avoid `memory`,`Cipher Input data too large`,etc. issues.
   final int maximumPartSize;
 
   /// key that separates size value from encrypted bytes value.
@@ -55,7 +53,7 @@ class CypherDioHttpAdapter extends HttpClientAdapter {
   /// this key must be shared with the server in order to parse data.
   final EncryptStreamMeta streamMeta;
 
-  /// [CypherDioHttpAdapter] instance. will proxy requests and and responses to
+  /// [CipherDioHttpAdapter] instance. will proxy requests and and responses to
   /// encrypt request body and decrypt response body.
   ///
   /// - `baseAdapter` [HttpClientAdapter] there will be an instance
@@ -76,8 +74,8 @@ class CypherDioHttpAdapter extends HttpClientAdapter {
   ///
   /// this value may need to be adjusted depending on the [IByteDataEncrypter]
   /// for example if you are using [RSAByteDataEncrypter] and you have to lower
-  /// this value to avoid `memory`,`cypher Input data too large`,etc. issues.
-  CypherDioHttpAdapter({
+  /// this value to avoid `memory`,`Cipher Input data too large`,etc. issues.
+  CipherDioHttpAdapter({
     HttpClientAdapter? baseAdapter,
     required this.encrypter,
     required this.decrypter,

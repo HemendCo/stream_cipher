@@ -5,7 +5,6 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:stream_cipher/http_request_cipher.dart';
-import 'package:stream_cipher/src/client_adapters/extensions/response_decrypter.dart';
 
 import 'http_request_cipher_example.dart';
 

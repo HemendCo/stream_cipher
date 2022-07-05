@@ -1,10 +1,12 @@
+library http_request_cipher.stream_extensions;
+
 import 'dart:convert' show base64Decode;
 import 'dart:typed_data' show Uint8List;
 
 import '../../../http_request_cipher.dart'
     show EncryptStreamMeta, IByteDataDecrypter, ListBreaker, NoEncryption;
 
-extension ResponseDecrypter on IByteDataDecrypter {
+extension StreamDecrypter on IByteDataDecrypter {
   Stream<Uint8List> alterDecryptStream(
     Stream<Uint8List> sourceStream, {
     required EncryptStreamMeta streamMeta,

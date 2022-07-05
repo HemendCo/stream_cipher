@@ -24,7 +24,7 @@ Future<void> main() async {
 void rrrr() {
   final encrypter = NoEncryptionByteDataEncrypter();
   final decrypter = NoEncryptionByteDataDecrypter();
-  final dioClient = CypherDioHttpAdapter(
+  final dioClient = CipherDioHttpAdapter(
     decrypter: decrypter,
     encrypter: encrypter,
     useBase64: true,
@@ -44,7 +44,7 @@ void rrrr() {
 void errr() {
   final encrypter = AESByteDataEncrypter.randomSecureKey();
   final decrypter = NoEncryptionByteDataDecrypter();
-  final dioClient = CypherDioHttpAdapter(
+  final dioClient = CipherDioHttpAdapter(
     decrypter: decrypter,
     encrypter: encrypter,
     useBase64: true,
@@ -64,12 +64,11 @@ void errr() {
 void erdr() {
   final encrypter = AESByteDataEncrypter.randomSecureKey();
   final decrypter = AESByteDataDecrypter(key: encrypter.key, iv: encrypter.iv);
-  final dioClient = CypherDioHttpAdapter(
+  final dioClient = CipherDioHttpAdapter(
     decrypter: decrypter,
     encrypter: encrypter,
     useBase64: true,
   );
-
   final dio = Dio()..httpClientAdapter = dioClient;
 
   dio
@@ -85,7 +84,7 @@ void erdr() {
 Future<void> erdr2() async {
   final encrypter = AESByteDataEncrypter.empty();
   final decrypter = NoEncryptionByteDataDecrypter();
-  final dioClient = CypherDioHttpAdapter(
+  final dioClient = CipherDioHttpAdapter(
     decrypter: decrypter,
     encrypter: encrypter,
     maximumPartSize: 5,
