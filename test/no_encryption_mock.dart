@@ -1,4 +1,4 @@
-part of 'http_request_cipher_test.dart';
+part of 'stream_cipher_test.dart';
 
 class _NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   @override
