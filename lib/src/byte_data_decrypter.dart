@@ -1,0 +1,135 @@
+library http_request_cipher.cipher_models;
+
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:blowfish_ecb/blowfish_ecb.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+
+import '../http_request_cipher.dart';
+
+class NoEncryptionByteDataDecrypter extends IByteDataDecrypter {
+  @override
+  Uint8List decrypt(Uint8List data) => data;
+}
+
+class AESByteDataDecrypter extends IByteDataDecrypter {
+  /// AESKey is a key that is used to encrypt and decrypt data.
+  ///
+  /// it is a `two-way` key.
+  final Key key;
+
+  /// AES-IV is a initialization vector that is used to encrypt and decrypt data.
+  final IV iv;
+
+  /// AES Decrypter instance that is used to encrypt data.
+  final Encrypter _decrypter;
+
+  /// A [IByteDataDecrypter] that encrypts data using AES.
+  AESByteDataDecrypter({required this.key, required this.iv}) : _decrypter = Encrypter(AES(key));
+
+  /// create [AESByteDataDecrypter] instance with utf8 [String] of [Key] and [IV]
+  factory AESByteDataDecrypter.fromString({
+    required String key,
+    required String iv,
+  }) =>
+      AESByteDataDecrypter(
+        key: Key.fromUtf8(key),
+        iv: IV.fromUtf8(iv),
+      );
+
+  /// create [AESByteDataDecrypter] instance with random secure [Key] and [IV]
+  ///
+  /// consider saving the [key] and [iv] after using this method.
+  /// this values will be lost if you don't store them.
+  factory AESByteDataDecrypter.randomSecureKey() => AESByteDataDecrypter(
+        key: Key.fromSecureRandom(32),
+        iv: IV.fromSecureRandom(16),
+      );
+
+  /// lowest security level. only use in development.
+  factory AESByteDataDecrypter.empty() => AESByteDataDecrypter(
+        key: Key.fromLength(32),
+        iv: IV.fromLength(16),
+      );
+
+  /// encrypt method that receives a [Uint8List] and then
+  /// returns an encrypted [Uint8List]
+  @override
+  Uint8List decrypt(Uint8List data) {
+    final encrypted = _decrypter.decryptBytes(Encrypted(data), iv: iv);
+    return Uint8List.fromList(encrypted);
+  }
+}
+
+class RSAByteDataDecrypter extends IByteDataDecrypter {
+  /// [RSAPrivateKey] is a key that is used to encrypt data.
+  final RSAPrivateKey privateKey;
+
+  /// RSA Decrypter instance that is used to encrypt data.
+  final Encrypter _decrypter;
+  RSAByteDataDecrypter({required this.privateKey})
+      : _decrypter = Encrypter(RSA(
+          privateKey: privateKey,
+        ));
+
+  /// loads private key from a file in async mode.
+
+  /// parse a string into [RSAPrivateKey] object
+  factory RSAByteDataDecrypter.fromString(String key) {
+    final parser = RSAKeyParser();
+    return RSAByteDataDecrypter(
+      privateKey: parser.parse(key) as RSAPrivateKey,
+    );
+  }
+  static Future<RSAByteDataDecrypter> fromFile(String fileAddress) async {
+    final privateKey = await File(fileAddress).readAsString();
+    return RSAByteDataDecrypter.fromString(privateKey);
+  }
+
+  /// loads private key from a file in sync mode.
+  factory RSAByteDataDecrypter.fromFileSync(String fileAddress) {
+    // return parser.parse(key) as T;
+    final file = File(fileAddress);
+    final key = file.readAsStringSync();
+    return RSAByteDataDecrypter.fromString(key);
+  }
+
+  // /// load privateKey key from an asset file.
+  // static Future<RSAByteDataDecrypter> loadPrivateKeyFromAsset(String assetId) async {
+  //   return RSAByteDataDecrypter.fromString(await rootBundle.loadString(assetId));
+  // }
+
+  /// encrypt method that receives a [Uint8List] and then returns an
+  /// encrypted [Uint8List] using RSA.
+  @override
+  Uint8List decrypt(Uint8List data) {
+    final decrypted = _decrypter.decryptBytes(Encrypted(data));
+    return Uint8List.fromList(decrypted.where((element) => element != 0).toList());
+  }
+}
+
+class BlowFishByteDataDecrypter extends IByteDataDecrypter {
+  final BlowfishECB encoder;
+  BlowFishByteDataDecrypter({required Uint8List key})
+      : assert(key.length < 56, "key size cannot be bigger than 56 bytes"),
+        encoder = BlowfishECB(key);
+  factory BlowFishByteDataDecrypter.fromString(String key) =>
+      BlowFishByteDataDecrypter(key: Uint8List.fromList(key.codeUnits));
+  @override
+  Uint8List decrypt(Uint8List data) {
+    final padLen = data[0];
+    final paddedData = data.getRange(1, data.length).toList();
+
+    final paddedDecoded = encoder.decode(paddedData);
+    final output = paddedDecoded.getRange(padLen, paddedDecoded.length).toList();
+    return Uint8List.fromList(output);
+  }
+}
+
+class GZipByteDataDecrypter extends IByteDataDecrypter {
+  @override
+  Uint8List decrypt(Uint8List data) {
+    return Uint8List.fromList(gzip.decoder.convert(data));
+  }
+}
