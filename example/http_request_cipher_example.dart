@@ -2,12 +2,23 @@ import 'package:dio/dio.dart';
 import 'package:http_request_cipher/http_request_cipher.dart';
 import 'package:http_request_cipher/src/client_adapters/dio_client_adapter.dart';
 
+import 'sample_dart_backend.dart';
+
+const kServerPort = 8092;
 const kRawEchoApiUrl = 'http://0.0.0.0:3000/example/echo_server.php';
-void main() {
+const kDecodedEchoAPIUrl = 'http://0.0.0.0:$kServerPort/';
+Future<void> main() async {
   /// run php serve with `php -S 0.0.0.0:3000`
+  /// these items need php to work
   rrrr();
   errr();
   erdr();
+
+  /// this one will run a server backed by dart and will encrypt when posting
+  /// but servers response will be encrypted body of request.
+  final server = await dartBackEnd();
+  await erdr2();
+  server.close(force: true);
 }
 
 void rrrr() {
@@ -69,4 +80,22 @@ void erdr() {
       .then((response) {
     print('Encrypted request -> decrypted response: ${response.data}');
   });
+}
+
+Future<void> erdr2() async {
+  final encrypter = AESByteDataEncrypter.empty();
+  final decrypter = NoEncryptionByteDataDecrypter();
+  final dioClient = CypherDioHttpAdapter(
+    decrypter: decrypter,
+    encrypter: encrypter,
+    maximumPartSize: 5,
+  );
+
+  final dio = Dio()..httpClientAdapter = dioClient;
+
+  final response = await dio.post(
+    kDecodedEchoAPIUrl,
+    data: '{"note":"this will be encrypted"}',
+  );
+  print('Encrypted request -> decrypted in backend: ${response.data}');
 }
