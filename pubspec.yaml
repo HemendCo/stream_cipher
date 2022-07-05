@@ -1,4 +1,4 @@
-name: http_request_cipher
+name: stream_cipher
 description: A library to encrypt and decrypt ByteLists and ByteLists Streams
   initially comes with DioHttpClientAdapter
 

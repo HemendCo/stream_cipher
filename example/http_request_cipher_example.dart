@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:http_request_cipher/http_request_cipher.dart';
-import 'package:http_request_cipher/src/client_adapters/dio_client_adapter.dart';
+import 'package:stream_cipher/http_request_cipher.dart';
+import 'package:stream_cipher/src/client_adapters/dio_client_adapter.dart';
 
 import 'sample_dart_backend.dart';
 

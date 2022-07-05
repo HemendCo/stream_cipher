@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:http_request_cipher/http_request_cipher.dart';
-import 'package:http_request_cipher/src/client_adapters/extensions/response_decrypter.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:stream_cipher/http_request_cipher.dart';
+import 'package:stream_cipher/src/client_adapters/extensions/response_decrypter.dart';
 
 import 'http_request_cipher_example.dart';
 
