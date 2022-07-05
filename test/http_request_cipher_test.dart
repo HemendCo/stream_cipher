@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:stream_cipher/http_request_cipher.dart';
+import 'package:stream_cipher/stream_cipher.dart';
 import 'package:test/test.dart';
 part 'no_encryption_mock.dart';
 

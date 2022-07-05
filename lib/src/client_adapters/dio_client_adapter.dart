@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
-import '../../http_request_cipher.dart';
+import '../../stream_cipher.dart';
 
 /// A [Dio] adapter that encrypts and decrypts data
 /// using a [IByteDataEncrypter].

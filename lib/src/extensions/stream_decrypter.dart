@@ -3,7 +3,7 @@ library http_request_cipher.stream_extensions;
 import 'dart:convert' show base64Decode;
 import 'dart:typed_data' show Uint8List;
 
-import '../../../http_request_cipher.dart'
+import '../../stream_cipher.dart'
     show EncryptStreamMeta, IByteDataDecrypter, ListBreaker, NoEncryption;
 
 extension StreamDecrypter on IByteDataDecrypter {
@@ -50,7 +50,7 @@ extension StreamDecrypter on IByteDataDecrypter {
         /// the rest is like above
         final waiterParser = waiter.splitByPart(streamMeta.ending.codeUnits);
         if (waiterParser.length > 1) {
-          final parts = waiterParser.take(waiterParser.length - 1);
+          final parts = waiterParser.where((element) => element.isNotEmpty);
           for (final part in parts) {
             final List<int> effectiveData;
             if (useBase64) {
