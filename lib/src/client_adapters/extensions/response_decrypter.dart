@@ -1,7 +1,8 @@
 import 'dart:convert' show base64Decode;
 import 'dart:typed_data' show Uint8List;
 
-import '../../../http_request_cipher.dart' show EncryptStreamMeta, IByteDataDecrypter, ListBreaker, NoEncryption;
+import '../../../http_request_cipher.dart'
+    show EncryptStreamMeta, IByteDataDecrypter, ListBreaker, NoEncryption;
 
 extension ResponseDecrypter on IByteDataDecrypter {
   Stream<Uint8List> alterDecryptStream(
@@ -20,7 +21,8 @@ extension ResponseDecrypter on IByteDataDecrypter {
         final paddedList = waiter + i;
 
         /// splitting the new stream data into chunks
-        final slicedList = paddedList.splitByPart(streamMeta.separator.codeUnits);
+        final slicedList =
+            paddedList.splitByPart(streamMeta.separator.codeUnits);
 
         /// passing last part of sliced list to waiter
         waiter = slicedList.last.toList();
