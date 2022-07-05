@@ -2,7 +2,8 @@ library http_request_cipher.cipher_models;
 
 import 'dart:io' show File, gzip;
 import 'dart:typed_data' show Uint8List;
-import 'package:encrypt/encrypt.dart' show AES, Encrypted, Encrypter, IV, Key, RSA, RSAKeyParser;
+import 'package:encrypt/encrypt.dart'
+    show AES, Encrypted, Encrypter, IV, Key, RSA, RSAKeyParser;
 import 'package:pointycastle/asymmetric/api.dart' show RSAPrivateKey;
 
 import '../http_request_cipher.dart' show IByteDataDecrypter;
