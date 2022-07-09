@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:stream_cipher/src/io_utils/client_adapters/dio_client_adapter.dart';
 import 'package:stream_cipher/src/io_utils/file/secure_file.dart';
 import 'package:stream_cipher/stream_cipher.dart';
@@ -12,14 +12,17 @@ const kServerPort = 8088;
 // const kRawEchoApiUrl = 'http://0.0.0.0:3000/example/echo_server.php';
 const kDecodedEchoAPIUrl = 'http://0.0.0.0:$kServerPort/decoded_echo';
 const kRawEchoApiUrl = 'http://0.0.0.0:$kServerPort/raw_echo';
+const kMiddleEchoApiUrl = 'http://0.0.0.0:$kServerPort/middle_cipher';
 const kMaxPartSize = 35;
+final logger = Logger();
 Future<void> main() async {
   final server = await dartBackEnd();
-  // rrrr();
+  await rrrr();
   await errr();
-  // erdr();
-  // await erdr2();
-  // await ioWriteAndRead();
+  await erdr();
+  await erdr2();
+  await erdr3();
+  await ioWriteAndRead();
   server.close(force: true);
 }
 
@@ -43,7 +46,8 @@ Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fug
     maxBlockSize: kMaxPartSize,
   );
   await secureFile.writeString(testData);
-  print(await secureFile.readString());
+  logger.i('File adapter test isValid: ${await secureFile.readString() == testData}', null,
+      StackTrace.fromString('DartExample'));
   // final fileWriter = testFile.openWrite();
   // await fileWriter.addStream(
   //   encrypter.alterEncryptStream(
@@ -67,10 +71,10 @@ Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fug
   // );
   // final buffer = <int>[];
   // await decryptedStream.forEach(buffer.addAll);
-  // print('Encrypted and Decrypted IO Task: ${String.fromCharCodes(buffer)}');
+  // logger.i('Encrypted and Decrypted IO Task: ${String.fromCharCodes(buffer)}');
 }
 
-void rrrr() {
+Future<void> rrrr() async {
   final encrypter = NoEncryptionByteDataEncrypter();
   final decrypter = NoEncryptionByteDataDecrypter();
   final dioClient = CipherDioHttpAdapter(
@@ -80,13 +84,13 @@ void rrrr() {
   );
 
   final dio = Dio()..httpClientAdapter = dioClient;
-  dio
+  await dio
       .post(
     kRawEchoApiUrl,
     data: '{"note":"this will be encrypted"}',
   )
       .then((response) {
-    print('Raw echo request -> Raw response: ${response.data}');
+    logger.i('Raw echo request -> Raw response: ${response.data}', null, StackTrace.fromString('DartExample'));
   });
 }
 
@@ -106,11 +110,11 @@ Future<void> errr() async {
     data: '{"note":"this will be encrypted"}',
   )
       .then((response) {
-    print('Encrypted echo request -> raw response: ${response.data}');
+    logger.i('Encrypted echo request -> raw response: ${response.data}', null, StackTrace.fromString('DartExample'));
   });
 }
 
-void erdr() {
+Future<void> erdr() async {
   final encrypter = AESByteDataEncrypter.randomSecureKey();
   final decrypter = AESByteDataDecrypter(key: encrypter.key, iv: encrypter.iv);
   final dioClient = CipherDioHttpAdapter(
@@ -120,13 +124,14 @@ void erdr() {
   );
   final dio = Dio()..httpClientAdapter = dioClient;
 
-  dio
+  await dio
       .post(
     kRawEchoApiUrl,
     data: '{"note":"this will be encrypted"}',
   )
       .then((response) {
-    print('Encrypted echo request -> decrypted response: ${response.data}');
+    logger.i(
+        'Encrypted echo request -> decrypted response: ${response.data}', null, StackTrace.fromString('DartExample'));
   });
 }
 
@@ -145,5 +150,24 @@ Future<void> erdr2() async {
     kDecodedEchoAPIUrl,
     data: '{"note":"this will be encrypted"}',
   );
-  print('Encrypted request -> decrypted in backend: ${response.data}');
+  logger.i('Encrypted request -> decrypted in backend: ${response.data}', null, StackTrace.fromString('DartExample'));
+}
+
+Future<void> erdr3() async {
+  final encrypter = AESByteDataEncrypter.empty();
+  final decrypter = NoEncryptionByteDataDecrypter();
+  final dioClient = CipherDioHttpAdapter(
+    decrypter: decrypter,
+    encrypter: encrypter,
+    maximumPartSize: kMaxPartSize,
+  );
+
+  final dio = Dio()..httpClientAdapter = dioClient;
+
+  final response = await dio.post(
+    kMiddleEchoApiUrl,
+    data: '{"note":"this will be encrypted"}',
+  );
+  logger.i('Encrypted request -> decrypted in backend (MiddleWare): ${response.data}', null,
+      StackTrace.fromString('DartExample'));
 }
