@@ -6,20 +6,28 @@ import 'dart:typed_data';
 import '../../../stream_cipher.dart';
 
 class SecureFile {
+  /// attached file
   final File file;
+
+  /// [IByteDataEncrypter] instance used during write operations
   final IByteDataEncrypter encrypter;
+
+  /// [IByteDataDecrypter] instance used during read operations
   final IByteDataDecrypter decrypter;
   final EncryptStreamMeta streamMeta;
   final bool useBase64;
   final int maxBlockSize;
-  const SecureFile(
+  SecureFile(
     this.file, {
     this.maxBlockSize = 1024,
     required this.encrypter,
     required this.decrypter,
     this.useBase64 = false,
     required this.streamMeta,
-  });
+  }) : assert(
+          encrypter.encryptMethod == decrypter.encryptMethod,
+          '''both of encrypter and decrypter in secure file must use same method.''',
+        );
   factory SecureFile.fromPath(
     String path, {
     required IByteDataEncrypter encrypter,

@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.1.1
+
+- removed `NoEncryption` abstract class
+
+- now using `encryptMethod` getter in `IByteDataEncrypter` and `IByteDataDecrypter` to find its method
+
+- added an assertion to `SecureFile` constructor to check `encryptMethod` of `encrypter` and `decrypter` to check they are from same type
+
 ## 1.1.0
 
 - Removed BlowFish encryption system due to a bug causes some data padded with 0x00 at end.

@@ -6,12 +6,14 @@ import 'package:encrypt/encrypt.dart'
     show AES, Encrypter, IV, Key, RSA, RSAKeyParser;
 import 'package:pointycastle/asymmetric/api.dart' show RSAPublicKey;
 
-import '../stream_cipher.dart' show IByteDataEncrypter, NoEncryption;
+import '../stream_cipher.dart' show EncryptMethod, IByteDataEncrypter;
 
-class NoEncryptionByteDataEncrypter extends IByteDataEncrypter
-    implements NoEncryption {
+class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   @override
   Uint8List encrypt(Uint8List data) => data;
+
+  @override
+  EncryptMethod get encryptMethod => EncryptMethod.none;
 }
 
 class AESByteDataEncrypter extends IByteDataEncrypter {
@@ -65,6 +67,9 @@ class AESByteDataEncrypter extends IByteDataEncrypter {
     final encrypted = _encrypter.encryptBytes(data, iv: iv);
     return encrypted.bytes;
   }
+
+  @override
+  EncryptMethod get encryptMethod => EncryptMethod.aes;
 }
 
 class RSAByteDataEncrypter extends IByteDataEncrypter {
@@ -109,6 +114,9 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
     final encrypted = _encrypter.encryptBytes(data);
     return encrypted.bytes;
   }
+
+  @override
+  EncryptMethod get encryptMethod => EncryptMethod.rsa;
 }
 
 class GZipByteDataEncoder extends IByteDataEncrypter {
@@ -116,4 +124,7 @@ class GZipByteDataEncoder extends IByteDataEncrypter {
   Uint8List encrypt(Uint8List data) {
     return Uint8List.fromList(gzip.encoder.convert(data));
   }
+
+  @override
+  EncryptMethod get encryptMethod => EncryptMethod.gzip;
 }

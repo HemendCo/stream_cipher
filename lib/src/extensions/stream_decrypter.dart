@@ -3,8 +3,12 @@ library stream_cipher.stream_extensions;
 import 'dart:convert' show base64Decode;
 import 'dart:typed_data' show Uint8List;
 
-import '../../stream_cipher.dart'
-    show EncryptStreamMeta, IByteDataDecrypter, ListBreaker, NoEncryption;
+import '../../stream_cipher.dart' //
+    show
+        EncryptMethod,
+        EncryptStreamMeta,
+        IByteDataDecrypter,
+        ListBreaker;
 
 extension StreamDecrypter on IByteDataDecrypter {
   Stream<Uint8List> alterDecryptStream(
@@ -12,7 +16,7 @@ extension StreamDecrypter on IByteDataDecrypter {
     required EncryptStreamMeta streamMeta,
     bool useBase64 = false,
   }) async* {
-    if (this is! NoEncryption) {
+    if (encryptMethod != EncryptMethod.none) {
       /// this will hold last part of source stream data
       /// this is due to the fact that the source stream will not send data
       /// in predictable chunks or in a predictable order.
