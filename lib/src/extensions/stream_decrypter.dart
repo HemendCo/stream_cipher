@@ -1,4 +1,4 @@
-library http_request_cipher.stream_extensions;
+library stream_cipher.stream_extensions;
 
 import 'dart:convert' show base64Decode;
 import 'dart:typed_data' show Uint8List;

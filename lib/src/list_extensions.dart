@@ -1,4 +1,4 @@
-library http_request_cipher.extensions;
+library stream_cipher.extensions;
 
 extension ListBreaker<T> on List<T> {
   /// split the list by given sublist

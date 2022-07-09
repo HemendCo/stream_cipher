@@ -1,4 +1,4 @@
-library http_request_cipher.stream_extensions;
+library stream_cipher.stream_extensions;
 
 import 'dart:convert' show base64Encode;
 import 'dart:typed_data' show Uint8List;
@@ -9,7 +9,7 @@ import '../../stream_cipher.dart'
 extension StreamEncryptTools on IByteDataEncrypter {
   Stream<Uint8List> alterEncryptStream(
     Stream<Uint8List> sourceStream, {
-    int maxBlocSize = 1024,
+    int maxBlockSize = 1024,
     required EncryptStreamMeta streamMeta,
     bool useBase64 = false,
   }) async* {
@@ -23,7 +23,7 @@ extension StreamEncryptTools on IByteDataEncrypter {
         /// breaking [effectiveData] into parts of maximumSize.
         /// remember the last part may be smaller than maximumSize.
         final sliceToPiecesOfSize = sourceStreamData.sliceToPiecesOfSize(
-          maxBlocSize,
+          maxBlockSize,
         );
         for (final dataPart in sliceToPiecesOfSize) {
           if (isFirst) {

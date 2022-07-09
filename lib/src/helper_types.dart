@@ -1,4 +1,4 @@
-library http_request_cipher.helper_types;
+library stream_cipher.helper_types;
 
 class EncryptStreamMeta {
   /// the ending of the stream.

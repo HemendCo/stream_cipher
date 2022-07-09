@@ -1,4 +1,4 @@
-library http_request_cipher.cipher_models;
+library stream_cipher.cipher_models;
 
 import 'dart:io' show File, gzip;
 import 'dart:typed_data' show Uint8List;
