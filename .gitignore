@@ -10,3 +10,4 @@ build/
 pubspec.lock
 .vscode/launch.json
 test.test
+test/_test_file.exe

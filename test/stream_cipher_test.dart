@@ -65,9 +65,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString
-                    .sliceToPiecesOfSize(1024)
-                    .map((e) => Uint8List.fromList(e.toList())),
+                testString.sliceToPiecesOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -121,9 +119,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
             testResultBuffer
               ..addAll(i)
               ..addAll(
-                slicedData.last != i
-                    ? streamMeta.separator.codeUnits
-                    : streamMeta.ending.codeUnits,
+                slicedData.last != i ? streamMeta.separator.codeUnits : streamMeta.ending.codeUnits,
               );
           }
           final buffer = <int>[];
@@ -266,9 +262,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
           final decrypter = _NoEncryptionByteDataDecrypter();
           final encrypted = decrypter.alterDecryptStream(
             Stream.fromIterable(
-              encryptedMessage
-                  .sliceToPiecesOfSize(15)
-                  .map((e) => Uint8List.fromList(e.toList())),
+              encryptedMessage.sliceToPiecesOfSize(15).map((e) => Uint8List.fromList(e.toList())),
             ),
             streamMeta: streamMeta,
           );
@@ -307,9 +301,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString
-                    .sliceToPiecesOfSize(1024)
-                    .map((e) => Uint8List.fromList(e.toList())),
+                testString.sliceToPiecesOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -346,9 +338,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString
-                    .sliceToPiecesOfSize(50)
-                    .map((e) => Uint8List.fromList(e.toList())),
+                testString.sliceToPiecesOfSize(50).map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
