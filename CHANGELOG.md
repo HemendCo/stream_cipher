@@ -15,6 +15,8 @@
 
 - moved encrypt/decrypt stream methods outside of the `IByteDataEncrypter/Decrypter` interfaces. they shouldn't be overridable.
 
+- added a `SecureFile` class that write/read to/from encrypted files.
+
 ## 1.0.0
 
 - Initial version.
