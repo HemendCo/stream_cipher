@@ -46,8 +46,11 @@ Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fug
     maxBlockSize: kMaxPartSize,
   );
   await secureFile.writeString(testData);
-  logger.i('File adapter test isValid: ${await secureFile.readString() == testData}', null,
-      StackTrace.fromString('DartExample'));
+  logger.i(
+    'File adapter test isValid: ${await secureFile.readString() == testData}',
+    null,
+    StackTrace.fromString('DartExample'),
+  );
   // final fileWriter = testFile.openWrite();
   // await fileWriter.addStream(
   //   encrypter.alterEncryptStream(
@@ -90,7 +93,11 @@ Future<void> rrrr() async {
     data: '{"note":"this will be encrypted"}',
   )
       .then((response) {
-    logger.i('Raw echo request -> Raw response: ${response.data}', null, StackTrace.fromString('DartExample'));
+    logger.i(
+      'Raw echo request -> Raw response: ${response.data}',
+      null,
+      StackTrace.fromString('DartExample'),
+    );
   });
 }
 
@@ -110,7 +117,11 @@ Future<void> errr() async {
     data: '{"note":"this will be encrypted"}',
   )
       .then((response) {
-    logger.i('Encrypted echo request -> raw response: ${response.data}', null, StackTrace.fromString('DartExample'));
+    logger.i(
+      'Encrypted echo request -> raw response: ${response.data}',
+      null,
+      StackTrace.fromString('DartExample'),
+    );
   });
 }
 
@@ -131,7 +142,10 @@ Future<void> erdr() async {
   )
       .then((response) {
     logger.i(
-        'Encrypted echo request -> decrypted response: ${response.data}', null, StackTrace.fromString('DartExample'));
+      'Encrypted echo request -> decrypted response: ${response.data}',
+      null,
+      StackTrace.fromString('DartExample'),
+    );
   });
 }
 
@@ -150,7 +164,11 @@ Future<void> erdr2() async {
     kDecodedEchoAPIUrl,
     data: '{"note":"this will be encrypted"}',
   );
-  logger.i('Encrypted request -> decrypted in backend: ${response.data}', null, StackTrace.fromString('DartExample'));
+  logger.i(
+    'Encrypted request -> decrypted in backend: ${response.data}',
+    null,
+    StackTrace.fromString('DartExample'),
+  );
 }
 
 Future<void> erdr3() async {
@@ -168,6 +186,9 @@ Future<void> erdr3() async {
     kMiddleEchoApiUrl,
     data: '{"note":"this will be encrypted"}',
   );
-  logger.i('Encrypted request -> decrypted in backend (MiddleWare): ${response.data}', null,
-      StackTrace.fromString('DartExample'));
+  logger.i(
+    'Encrypted request -> decrypted in backend (MiddleWare): ${response.data}',
+    null,
+    StackTrace.fromString('DartExample'),
+  );
 }

@@ -85,7 +85,11 @@ Future<HttpServer> dartBackEnd() async {
       (Request request) async {
         final test = await request.body.asString;
         final data = jsonDecode(test);
-        logger.i('note in back end (MiddleWare): ${data['note']}', null, StackTrace.fromString('BackEnd'));
+        logger.i(
+          'note in back end (MiddleWare): ${data['note']}',
+          null,
+          StackTrace.fromString('BackEnd'),
+        );
         return Response(
           200,
           body: test,
@@ -94,7 +98,11 @@ Future<HttpServer> dartBackEnd() async {
       use: decryptRequestMiddleware + encryptResponseMiddleware,
     );
   final server = await serve(webServer, '0.0.0.0', kServerPort);
-  logger.i('awaiting for request on port $kServerPort', null, StackTrace.fromString('BackEnd'));
+  logger.i(
+    'awaiting for request on port $kServerPort',
+    null,
+    StackTrace.fromString('BackEnd'),
+  );
 
   return server;
 }
