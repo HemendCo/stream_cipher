@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.2
+
+- added `FileMode` to `SecureFile` writer to support appending to files
+
 ## 1.1.1
 
 - removed `NoEncryption` abstract class

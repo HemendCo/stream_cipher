@@ -1,9 +1,17 @@
 library stream_cipher.secure_file;
 
-import 'dart:io';
-import 'dart:typed_data';
+import 'dart:convert' show Encoding, utf8;
+import 'dart:io' show File, FileMode;
+import 'dart:typed_data' show Uint8List;
 
-import '../../../stream_cipher.dart';
+import '../../../stream_cipher.dart' //
+    show
+        EncryptStreamMeta,
+        IByteDataDecrypter,
+        IByteDataEncrypter,
+        ListBreaker,
+        StreamDecrypter,
+        StreamEncryptTools;
 
 class SecureFile {
   /// attached file
@@ -23,7 +31,9 @@ class SecureFile {
     required this.encrypter,
     required this.decrypter,
     this.useBase64 = false,
-    required this.streamMeta,
+    this.streamMeta = const EncryptStreamMeta.sameSeparatorAsEnding(
+      '#SEPARATOR#',
+    ),
   }) : assert(
           encrypter.encryptMethod == decrypter.encryptMethod,
           '''both of encrypter and decrypter in secure file must use same method.''',
@@ -47,8 +57,13 @@ class SecureFile {
   Future<void> write(
     Stream<Uint8List> data, {
     int? blockSize,
+    FileMode mode = FileMode.write,
+    Encoding encoding = utf8,
   }) async {
-    final fileWriter = file.openWrite();
+    final fileWriter = file.openWrite(
+      encoding: encoding,
+      mode: mode,
+    );
     await fileWriter.addStream(
       encrypter.alterEncryptStream(
         data.map(
@@ -75,6 +90,8 @@ class SecureFile {
   Future<void> writeByteArray(
     Uint8List data, {
     int? blockSize,
+    FileMode mode = FileMode.write,
+    Encoding encoding = utf8,
   }) async {
     return write(
       Stream.fromIterable(
@@ -84,6 +101,8 @@ class SecureFile {
               ),
             ),
       ),
+      mode: mode,
+      encoding: encoding,
       blockSize: blockSize,
     );
   }
@@ -94,10 +113,17 @@ class SecureFile {
     return Uint8List.fromList(buffer);
   }
 
-  Future<void> writeString(String data, {int? blockSize}) async {
+  Future<void> writeString(
+    String data, {
+    int? blockSize,
+    FileMode mode = FileMode.write,
+    Encoding encoding = utf8,
+  }) async {
     return writeByteArray(
       Uint8List.fromList(data.codeUnits),
       blockSize: blockSize,
+      encoding: encoding,
+      mode: mode,
     );
   }
 

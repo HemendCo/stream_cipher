@@ -27,8 +27,9 @@ extension StreamDecrypter on IByteDataDecrypter {
         final paddedList = waiter + i;
 
         /// splitting the new stream data into chunks
-        final slicedList =
-            paddedList.splitByPart(streamMeta.separator.codeUnits);
+        final slicedList = paddedList.splitByPart(
+          streamMeta.separator.codeUnits,
+        );
 
         /// passing last part of sliced list to waiter
         waiter = slicedList.last.toList();
@@ -65,6 +66,7 @@ extension StreamDecrypter on IByteDataDecrypter {
             final encrypted = decrypt(Uint8List.fromList(effectiveData));
             yield encrypted;
           }
+          waiter = [];
         }
       }
     } else {

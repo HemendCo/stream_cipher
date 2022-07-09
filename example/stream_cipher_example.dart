@@ -32,7 +32,7 @@ const streamMeta = EncryptStreamMeta(
   separator: '#=#',
 );
 Future<void> ioWriteAndRead() async {
-  final encrypter = AESByteDataEncrypter.randomSecureKey();
+  final encrypter = AESByteDataEncrypter.empty();
   final decrypter = AESByteDataDecrypter(key: encrypter.key, iv: encrypter.iv);
   final testData =
       '''Elit mollit Lorem et cillum voluptate id aliqua. Ipsum velit mollit duis cupidatat exercitation aliqua excepteur eu anim excepteur ad. Sint dolor eiusmod aliquip proident elit. Qui cupidatat veniam minim do cillum enim aute veniam sit duis. Voluptate quis consectetur duis reprehenderit. Excepteur sunt occaecat in labore ea consequat dolor culpa ex aliquip aute consequat.
@@ -41,40 +41,26 @@ Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fug
     testFile,
     encrypter: encrypter,
     decrypter: decrypter,
-    streamMeta: streamMeta,
+    // streamMeta: streamMeta,
     useBase64: true,
     maxBlockSize: kMaxPartSize,
   );
-  await secureFile.writeString(testData);
+  await secureFile.writeString(testData, mode: FileMode.append);
+  final readData = await secureFile.readString();
+  int tryCount = 0;
+  while (true) {
+    tryCount++;
+    if (readData == testData * tryCount) {
+      break;
+    }
+    // tryCount++;
+  }
+
   logger.i(
-    'File adapter test isValid: ${await secureFile.readString() == testData}',
+    'File adapter test isValid: ${readData == testData}',
     null,
     StackTrace.fromString('DartExample'),
   );
-  // final fileWriter = testFile.openWrite();
-  // await fileWriter.addStream(
-  //   encrypter.alterEncryptStream(
-  //     testData.map(
-  //       (event) => Uint8List.fromList(
-  //         event.toList(),
-  //       ),
-  //     ),
-  //     streamMeta: streamMeta,
-  //   ),
-  // );
-  // fileWriter.close();
-  // final fileReader = testFile.openRead();
-  // final decryptedStream = decrypter.alterDecryptStream(
-  //   fileReader.map(
-  //     (event) => Uint8List.fromList(
-  //       event.toList(),
-  //     ),
-  //   ),
-  //   streamMeta: streamMeta,
-  // );
-  // final buffer = <int>[];
-  // await decryptedStream.forEach(buffer.addAll);
-  // logger.i('Encrypted and Decrypted IO Task: ${String.fromCharCodes(buffer)}');
 }
 
 Future<void> rrrr() async {
