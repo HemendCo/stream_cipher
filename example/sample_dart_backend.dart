@@ -86,6 +86,7 @@ Future<HttpServer> dartBackEnd() async {
         final test = await request.body.asString;
         final data = jsonDecode(test);
         logger.i(
+          // ignore: avoid_dynamic_calls
           'note in back end (MiddleWare): ${data['note']}',
           null,
           StackTrace.fromString('BackEnd'),

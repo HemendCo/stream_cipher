@@ -34,7 +34,7 @@ const streamMeta = EncryptStreamMeta(
 Future<void> ioWriteAndRead() async {
   final encrypter = AESByteDataEncrypter.empty();
   final decrypter = AESByteDataDecrypter(key: encrypter.key, iv: encrypter.iv);
-  final testData =
+  const testData =
       '''Elit mollit Lorem et cillum voluptate id aliqua. Ipsum velit mollit duis cupidatat exercitation aliqua excepteur eu anim excepteur ad. Sint dolor eiusmod aliquip proident elit. Qui cupidatat veniam minim do cillum enim aute veniam sit duis. Voluptate quis consectetur duis reprehenderit. Excepteur sunt occaecat in labore ea consequat dolor culpa ex aliquip aute consequat.
 Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fugiat dolore sit labore. Enim excepteur sit amet do laboris mollit esse nulla do occaecat pariatur id. Ut sit sit sit velit tempor dolore adipisicing pariatur aliquip aute cillum ipsum.''';
   final secureFile = SecureFile(
@@ -47,7 +47,7 @@ Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fug
   );
   await secureFile.writeString(testData, mode: FileMode.append);
   final readData = await secureFile.readString();
-  int tryCount = 0;
+  var tryCount = 0;
   while (true) {
     tryCount++;
     if (readData == testData * tryCount) {
