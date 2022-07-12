@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.4
+
+- added new `IByteEn/Decrypter` called `MultiLayer` that will receive a list of `IByteEn/Decrypter`s and will use them in a chain.
+
+- removed `Encrypt` package [https://pub.dev/packages/encrypt] from dependencies.
+
 ## 1.1.3
 
 - added extensions for `RSAPublicKey` and `RSAPrivateKey` to export them to `PEM` format
