@@ -2,11 +2,17 @@ library stream_cipher.cipher_models;
 
 import 'dart:io' show File, gzip;
 import 'dart:typed_data' show Uint8List;
-import 'package:encrypt/encrypt.dart'
-    show AES, Encrypter, IV, Key, RSA, RSAKeyParser;
+import 'package:encrypt/encrypt.dart' //
+    show
+        AES,
+        Encrypter,
+        IV,
+        Key,
+        RSA;
 import 'package:pointycastle/asymmetric/api.dart' show RSAPublicKey;
 
 import '../stream_cipher.dart' show EncryptMethod, IByteDataEncrypter;
+import 'cipher_utils/rsa/rsa_tools.dart';
 
 class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   @override
@@ -87,9 +93,8 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
 
   /// parse a string into [RSAPublicKey] object
   factory RSAByteDataEncrypter.fromString(String key) {
-    final parser = RSAKeyParser();
     return RSAByteDataEncrypter(
-      publicKey: parser.parse(key) as RSAPublicKey,
+      publicKey: RSAKeyTools.rsaPublicKeyFromPem(key),
     );
   }
 
