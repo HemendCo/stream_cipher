@@ -10,7 +10,10 @@ import 'package:encrypt/encrypt.dart' //
         IV,
         Key;
 import 'package:pointycastle/asymmetric/rsa.dart';
-import 'package:pointycastle/pointycastle.dart' show PrivateKeyParameter, RSAPrivateKey;
+import 'package:pointycastle/pointycastle.dart' //
+    show
+        PrivateKeyParameter,
+        RSAPrivateKey;
 
 import 'cipher_utils/rsa/rsa_key_extensions.dart';
 import 'cipher_utils/rsa/rsa_tools.dart';

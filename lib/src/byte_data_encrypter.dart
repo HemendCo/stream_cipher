@@ -9,7 +9,10 @@ import 'package:encrypt/encrypt.dart' //
         Encrypter,
         Key;
 import 'package:pointycastle/asymmetric/rsa.dart' show RSAEngine;
-import 'package:pointycastle/pointycastle.dart' show PublicKeyParameter, RSAPublicKey;
+import 'package:pointycastle/pointycastle.dart' //
+    show
+        PublicKeyParameter,
+        RSAPublicKey;
 
 import '../stream_cipher.dart' show EncryptMethod, IByteDataEncrypter;
 import 'cipher_utils/rsa/rsa_key_extensions.dart';
