@@ -1,3 +1,4 @@
+library stream_cipher.rsa_key_tools;
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert' show base64;
@@ -15,7 +16,7 @@ import 'package:pointycastle/export.dart' show RSAPrivateKey, RSAPublicKey;
 
 import '../../list_extensions.dart';
 
-abstract class KeyMetaData {
+abstract class RSAKeyMetaData {
   static const BEGIN_PRIVATE_KEY = '-----BEGIN PRIVATE KEY-----';
   static const END_PRIVATE_KEY = '-----END PRIVATE KEY-----';
 
@@ -71,7 +72,7 @@ extension PrivateKeyTools on RSAPrivateKey {
           String.fromCharCodes,
         );
     // ignore: lines_longer_than_80_chars
-    return '${KeyMetaData.BEGIN_RSA_PRIVATE_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_RSA_PRIVATE_KEY}';
+    return '${RSAKeyMetaData.BEGIN_RSA_PRIVATE_KEY}\n${chunks.join('\n')}\n${RSAKeyMetaData.END_RSA_PRIVATE_KEY}';
   }
 
   /// extract private key to PEM encoded string
@@ -138,7 +139,7 @@ extension PrivateKeyTools on RSAPrivateKey {
     final chunks = dataBase64.codeUnits.sliceToPiecesOfSize(64).map(
           String.fromCharCodes,
         );
-    return '''${KeyMetaData.BEGIN_PRIVATE_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_PRIVATE_KEY}''';
+    return '''${RSAKeyMetaData.BEGIN_PRIVATE_KEY}\n${chunks.join('\n')}\n${RSAKeyMetaData.END_PRIVATE_KEY}''';
   }
 }
 
@@ -153,7 +154,7 @@ extension PublicKeyTools on RSAPublicKey {
     final chunks = dataBase64.codeUnits.sliceToPiecesOfSize(64).map(
           String.fromCharCodes,
         );
-    return '''${KeyMetaData.BEGIN_RSA_PUBLIC_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_RSA_PUBLIC_KEY}''';
+    return '''${RSAKeyMetaData.BEGIN_RSA_PUBLIC_KEY}\n${chunks.join('\n')}\n${RSAKeyMetaData.END_RSA_PUBLIC_KEY}''';
   }
 
   /// extract public key to PEM encoded string
@@ -181,6 +182,6 @@ extension PublicKeyTools on RSAPublicKey {
           String.fromCharCodes,
         );
 
-    return '''${KeyMetaData.BEGIN_PUBLIC_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_PUBLIC_KEY}''';
+    return '''${RSAKeyMetaData.BEGIN_PUBLIC_KEY}\n${chunks.join('\n')}\n${RSAKeyMetaData.END_PUBLIC_KEY}''';
   }
 }

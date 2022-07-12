@@ -1,3 +1,4 @@
+library stream_cipher.rsa_key_tools;
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert' show LineSplitter, base64Decode;
@@ -23,6 +24,29 @@ import 'package:pointycastle/export.dart'
 /// encoded strings.
 abstract class RSAKeyTools {
   RSAKeyTools._();
+
+  /// generating a `Key-Pair` with a given [bitLength] as keySize
+  /// and [secureRandom]
+  ///
+  /// this is not a asynchronous operation so be careful when using it.
+  ///
+  /// this operation will take time depending on the [bitLength]
+  ///
+  ///
+  /// in my tests using isolates
+  ///
+  /// - it took less than `a second` to generate a key with a
+  /// bitLength of `2048` bits.
+  ///
+  /// - `2` `seconds` to generate a key with a bitLength of `4096` bits.
+  ///
+  /// - `a minute` to generate a key with a bitLength of `8192` bits.
+  ///
+  /// - for a bitLength of `16384` bits it took about `15 minutes` to
+  /// generate a key.
+  ///
+  /// so as you can see generating bigger keys need more time and for
+  /// most usecases it is not an ideal solution.
   static AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
     SecureRandom secureRandom, {
     int bitLength = 2048,
@@ -59,8 +83,8 @@ abstract class RSAKeyTools {
     );
   }
 
-  /// load RSA (Public/Private) keys from **PEMPks1 Encoded String** (not file path).
-  static AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> loadKeyPairPks1({
+  /// load RSA (Public/Private) keys from **PEMPkcs1 Encoded String** (not file path).
+  static AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> loadKeyPairPkcs1({
     required String privateKey,
     required String publicKey,
   }) {
@@ -72,21 +96,25 @@ abstract class RSAKeyTools {
     );
   }
 
+  /// load RSA (Private) keys from **PEM Encoded String** (not file path).
   static RSAPrivateKey rsaPrivateKeyFromPem(String pem) {
     final bytes = _getBytesFromPEMString(pem);
     return _rsaPrivateKeyFromDERBytes(bytes);
   }
 
+  /// load RSA (Private) keys from **PEMPkcs1 Encoded String** (not file path).
   static RSAPrivateKey rsaPrivateKeyFromPemPkcs1(String pem) {
     final bytes = _getBytesFromPEMString(pem);
     return _rsaPrivateKeyFromDERBytesPkcs1(bytes);
   }
 
+  /// load RSA (Public) keys from **PEM Encoded String** (not file path).
   static RSAPublicKey rsaPublicKeyFromPem(String pem) {
     final bytes = _getBytesFromPEMString(pem);
     return _rsaPublicKeyFromDERBytes(bytes);
   }
 
+  /// load RSA (Public) keys from **PEMPkcs1 Encoded String** (not file path).
   static RSAPublicKey rsaPublicKeyFromPemPkcs1(String pem) {
     final bytes = _getBytesFromPEMString(pem);
     return _rsaPublicKeyFromDERBytesPkcs1(bytes);

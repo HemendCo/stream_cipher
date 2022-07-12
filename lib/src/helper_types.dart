@@ -13,6 +13,7 @@ class EncryptStreamMeta {
     required this.ending,
     required this.separator,
   }) : assert(ending != separator);
+
   const EncryptStreamMeta.sameSeparatorAsEnding(String value)
       : ending = value,
         separator = value;
