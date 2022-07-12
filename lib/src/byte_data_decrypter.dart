@@ -8,10 +8,11 @@ import 'package:encrypt/encrypt.dart' //
         Encrypted,
         Encrypter,
         IV,
-        Key,
-        RSA;
-import 'package:pointycastle/asymmetric/api.dart' show RSAPrivateKey;
+        Key;
+import 'package:pointycastle/asymmetric/rsa.dart';
+import 'package:pointycastle/pointycastle.dart' show PrivateKeyParameter, RSAPrivateKey;
 
+import 'cipher_utils/rsa/rsa_key_extensions.dart';
 import 'cipher_utils/rsa/rsa_tools.dart';
 import 'stream_cipher_base.dart' show EncryptMethod, IByteDataDecrypter;
 
@@ -84,20 +85,31 @@ class RSAByteDataDecrypter extends IByteDataDecrypter {
   final RSAPrivateKey privateKey;
 
   /// RSA Decrypter instance that is used to encrypt data.
-  final Encrypter _decrypter;
+
+  final RSAEngine _engine;
+
   RSAByteDataDecrypter({required this.privateKey})
-      : _decrypter = Encrypter(
-          RSA(
-            privateKey: privateKey,
-          ),
-        );
+      : _engine = RSAEngine()
+          ..init(
+            false,
+            PrivateKeyParameter<RSAPrivateKey>(
+              privateKey,
+            ),
+          );
 
   /// loads private key from a file in async mode.
 
   /// parse a string into [RSAPrivateKey] object
   factory RSAByteDataDecrypter.fromString(String key) {
+    final isPkcs1 = key.split('\n').first == KeyMetaData.BEGIN_RSA_PRIVATE_KEY;
     return RSAByteDataDecrypter(
-      privateKey: RSAKeyTools.rsaPrivateKeyFromPem(key),
+      privateKey: isPkcs1
+          ? RSAKeyTools.rsaPrivateKeyFromPemPkcs1(
+              key,
+            )
+          : RSAKeyTools.rsaPrivateKeyFromPem(
+              key,
+            ),
     );
   }
   static Future<RSAByteDataDecrypter> fromFile(String fileAddress) async {
@@ -117,7 +129,7 @@ class RSAByteDataDecrypter extends IByteDataDecrypter {
   /// encrypted [Uint8List] using RSA.
   @override
   Uint8List decrypt(Uint8List data) {
-    final decrypted = _decrypter.decryptBytes(Encrypted(data));
+    final decrypted = _engine.process(data);
     return Uint8List.fromList(
       decrypted
           .where(

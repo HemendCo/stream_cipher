@@ -1,28 +1,37 @@
 // ignore_for_file: constant_identifier_names
 
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:convert' show base64;
+import 'dart:typed_data' show Uint8List;
 
-import 'package:pointycastle/asn1.dart';
+import 'package:pointycastle/asn1.dart' //
+    show
+        ASN1BitString,
+        ASN1Integer,
+        ASN1Object,
+        ASN1ObjectIdentifier,
+        ASN1OctetString,
+        ASN1Sequence;
 import 'package:pointycastle/export.dart' show RSAPrivateKey, RSAPublicKey;
 
 import '../../list_extensions.dart';
 
-const _BEGIN_PRIVATE_KEY = '-----BEGIN PRIVATE KEY-----';
-const _END_PRIVATE_KEY = '-----END PRIVATE KEY-----';
+abstract class KeyMetaData {
+  static const BEGIN_PRIVATE_KEY = '-----BEGIN PRIVATE KEY-----';
+  static const END_PRIVATE_KEY = '-----END PRIVATE KEY-----';
 
-const _BEGIN_PUBLIC_KEY = '-----BEGIN PUBLIC KEY-----';
-const _END_PUBLIC_KEY = '-----END PUBLIC KEY-----';
+  static const BEGIN_PUBLIC_KEY = '-----BEGIN PUBLIC KEY-----';
+  static const END_PUBLIC_KEY = '-----END PUBLIC KEY-----';
 
-const _BEGIN_RSA_PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----';
-const _END_RSA_PRIVATE_KEY = '-----END RSA PRIVATE KEY-----';
+  static const BEGIN_RSA_PRIVATE_KEY = '-----BEGIN RSA PRIVATE KEY-----';
+  static const END_RSA_PRIVATE_KEY = '-----END RSA PRIVATE KEY-----';
 
-const _BEGIN_RSA_PUBLIC_KEY = '-----BEGIN RSA PUBLIC KEY-----';
-const _END_RSA_PUBLIC_KEY = '-----END RSA PUBLIC KEY-----';
+  static const BEGIN_RSA_PUBLIC_KEY = '-----BEGIN RSA PUBLIC KEY-----';
+  static const END_RSA_PUBLIC_KEY = '-----END RSA PUBLIC KEY-----';
+}
 
 /// following extensions are from: [https://github.com/Ephenodrom/Dart-Basic-Utils#cryptoutils]
 extension PrivateKeyTools on RSAPrivateKey {
-  /// extract private key to PEMPks1 encoded string
+  /// extract private key to PEMPkcs1 encoded string
   String toPemPkcs1String() {
     final version = ASN1Integer(BigInt.from(0));
     final modulus = ASN1Integer(n);
@@ -62,7 +71,7 @@ extension PrivateKeyTools on RSAPrivateKey {
           String.fromCharCodes,
         );
     // ignore: lines_longer_than_80_chars
-    return '$_BEGIN_RSA_PRIVATE_KEY\n${chunks.join('\n')}\n$_END_RSA_PRIVATE_KEY';
+    return '${KeyMetaData.BEGIN_RSA_PRIVATE_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_RSA_PRIVATE_KEY}';
   }
 
   /// extract private key to PEM encoded string
@@ -129,12 +138,12 @@ extension PrivateKeyTools on RSAPrivateKey {
     final chunks = dataBase64.codeUnits.sliceToPiecesOfSize(64).map(
           String.fromCharCodes,
         );
-    return '$_BEGIN_PRIVATE_KEY\n${chunks.join('\n')}\n$_END_PRIVATE_KEY';
+    return '''${KeyMetaData.BEGIN_PRIVATE_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_PRIVATE_KEY}''';
   }
 }
 
 extension PublicKeyTools on RSAPublicKey {
-  /// extract public key to PEMPks1 encoded string
+  /// extract public key to PEMPkcs1 encoded string
   String toPemPkcs1String() {
     final topLevelSeq = ASN1Sequence()
       ..add(ASN1Integer(modulus))
@@ -144,7 +153,7 @@ extension PublicKeyTools on RSAPublicKey {
     final chunks = dataBase64.codeUnits.sliceToPiecesOfSize(64).map(
           String.fromCharCodes,
         );
-    return '$_BEGIN_RSA_PUBLIC_KEY\n${chunks.join('\n')}\n$_END_RSA_PUBLIC_KEY';
+    return '''${KeyMetaData.BEGIN_RSA_PUBLIC_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_RSA_PUBLIC_KEY}''';
   }
 
   /// extract public key to PEM encoded string
@@ -172,6 +181,6 @@ extension PublicKeyTools on RSAPublicKey {
           String.fromCharCodes,
         );
 
-    return '$_BEGIN_PUBLIC_KEY\n${chunks.join('\n')}\n$_END_PUBLIC_KEY';
+    return '''${KeyMetaData.BEGIN_PUBLIC_KEY}\n${chunks.join('\n')}\n${KeyMetaData.END_PUBLIC_KEY}''';
   }
 }

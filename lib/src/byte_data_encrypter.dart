@@ -5,13 +5,14 @@ import 'dart:typed_data' show Uint8List;
 import 'package:encrypt/encrypt.dart' //
     show
         AES,
-        Encrypter,
         IV,
-        Key,
-        RSA;
-import 'package:pointycastle/asymmetric/api.dart' show RSAPublicKey;
+        Encrypter,
+        Key;
+import 'package:pointycastle/asymmetric/rsa.dart' show RSAEngine;
+import 'package:pointycastle/pointycastle.dart' show PublicKeyParameter, RSAPublicKey;
 
 import '../stream_cipher.dart' show EncryptMethod, IByteDataEncrypter;
+import 'cipher_utils/rsa/rsa_key_extensions.dart';
 import 'cipher_utils/rsa/rsa_tools.dart';
 
 class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
@@ -83,18 +84,29 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   final RSAPublicKey publicKey;
 
   /// RSA Encrypter instance that is used to encrypt data.
-  final Encrypter _encrypter;
+  // final Encrypter _encrypter;
+  final RSAEngine _engine;
+
   RSAByteDataEncrypter({required this.publicKey})
-      : _encrypter = Encrypter(
-          RSA(
-            publicKey: publicKey,
-          ),
-        );
+      : _engine = RSAEngine()
+          ..init(
+            true,
+            PublicKeyParameter<RSAPublicKey>(
+              publicKey,
+            ),
+          );
 
   /// parse a string into [RSAPublicKey] object
   factory RSAByteDataEncrypter.fromString(String key) {
+    final isPkcs1 = key.split('\n').first == KeyMetaData.BEGIN_RSA_PUBLIC_KEY;
     return RSAByteDataEncrypter(
-      publicKey: RSAKeyTools.rsaPublicKeyFromPem(key),
+      publicKey: isPkcs1
+          ? RSAKeyTools.rsaPublicKeyFromPemPkcs1(
+              key,
+            )
+          : RSAKeyTools.rsaPublicKeyFromPem(
+              key,
+            ),
     );
   }
 
@@ -116,8 +128,8 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   /// encrypted [Uint8List] using RSA.
   @override
   Uint8List encrypt(Uint8List data) {
-    final encrypted = _encrypter.encryptBytes(data);
-    return encrypted.bytes;
+    final encrypted = _engine.process(data);
+    return encrypted;
   }
 
   @override
