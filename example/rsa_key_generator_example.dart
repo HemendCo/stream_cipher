@@ -2,7 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/src/platform_check/platform_check.dart' as pointy_platform;
+import 'package:pointycastle/src/platform_check/platform_check.dart' //
+    as pointy_platform;
 import 'package:stream_cipher/src/cipher_utils/rsa/rsa_key_extensions.dart';
 
 import 'package:stream_cipher/src/cipher_utils/rsa/rsa_tools.dart';
