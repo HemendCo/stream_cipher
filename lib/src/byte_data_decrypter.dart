@@ -17,14 +17,14 @@ import 'package:pointycastle/pointycastle.dart' //
 
 import 'cipher_utils/rsa/rsa_key_extensions.dart';
 import 'cipher_utils/rsa/rsa_tools.dart';
-import 'stream_cipher_base.dart' show EncryptMethod, IByteDataDecrypter;
+import 'stream_cipher_base.dart' show IByteDataDecrypter;
 
 class NoEncryptionByteDataDecrypter extends IByteDataDecrypter {
   @override
   Uint8List decrypt(Uint8List data) => data;
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.none;
+  String get encryptMethod => 'NONE';
 }
 
 class AESByteDataDecrypter extends IByteDataDecrypter {
@@ -80,7 +80,7 @@ class AESByteDataDecrypter extends IByteDataDecrypter {
   }
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.aes;
+  String get encryptMethod => 'AES';
 }
 
 class RSAByteDataDecrypter extends IByteDataDecrypter {
@@ -90,7 +90,8 @@ class RSAByteDataDecrypter extends IByteDataDecrypter {
   /// RSA Decrypter instance that is used to encrypt data.
 
   final RSAEngine _engine;
-
+  int get inputBlocSize => _engine.inputBlockSize;
+  int get outputBlocSize => _engine.outputBlockSize;
   RSAByteDataDecrypter({required this.privateKey})
       : _engine = RSAEngine()
           ..init(
@@ -104,7 +105,12 @@ class RSAByteDataDecrypter extends IByteDataDecrypter {
 
   /// parse a string into [RSAPrivateKey] object
   factory RSAByteDataDecrypter.fromString(String key) {
-    final isPkcs1 = key.split('\n').first == KeyMetaData.BEGIN_RSA_PRIVATE_KEY;
+    final isPkcs1 = key
+            .split(
+              '\n',
+            )
+            .first ==
+        RSAKeyMetaData.BEGIN_RSA_PRIVATE_KEY;
     return RSAByteDataDecrypter(
       privateKey: isPkcs1
           ? RSAKeyTools.rsaPrivateKeyFromPemPkcs1(
@@ -132,6 +138,10 @@ class RSAByteDataDecrypter extends IByteDataDecrypter {
   /// encrypted [Uint8List] using RSA.
   @override
   Uint8List decrypt(Uint8List data) {
+    assert(
+      inputBlocSize >= data.length,
+      '''data bloc size is bigger than expected. given bloc size is (${data.length}), expected bloc size is ($inputBlocSize)''',
+    );
     final decrypted = _engine.process(data);
     return Uint8List.fromList(
       decrypted
@@ -143,7 +153,11 @@ class RSAByteDataDecrypter extends IByteDataDecrypter {
   }
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.rsa;
+  String get encryptMethod => _engine.algorithmName;
+  @override
+  Future<void> reset() async {
+    _engine.reset();
+  }
 }
 
 class GZipByteDataDecoder extends IByteDataDecrypter {
@@ -153,5 +167,27 @@ class GZipByteDataDecoder extends IByteDataDecrypter {
   }
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.gzip;
+  String get encryptMethod => 'GZIP';
+}
+
+class MultiLayerDecrypter extends IByteDataDecrypter {
+  final List<IByteDataDecrypter> _decrypters;
+  MultiLayerDecrypter(this._decrypters);
+  @override
+  Uint8List decrypt(Uint8List data) {
+    var result = data;
+    for (final decrypter in _decrypters) {
+      result = decrypter.decrypt(result);
+    }
+    return result;
+  }
+
+  @override
+  String get encryptMethod => _decrypters
+      .map(
+        (e) => e.encryptMethod,
+      )
+      .join(
+        '->',
+      );
 }

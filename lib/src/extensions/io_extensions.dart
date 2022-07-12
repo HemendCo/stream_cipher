@@ -6,6 +6,7 @@ import '../../stream_cipher.dart';
 import '../io_utils/file/secure_file.dart';
 
 extension SecuredFile on File {
+  /// get a [SecureFile] from this file
   SecureFile asSecureFile({
     int maxBlockSize = 1024,
     required IByteDataEncrypter encrypter,

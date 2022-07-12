@@ -5,18 +5,23 @@ import 'dart:typed_data' show Uint8List;
 
 import '../../stream_cipher.dart' //
     show
-        EncryptMethod,
         EncryptStreamMeta,
         IByteDataDecrypter,
         ListBreaker;
 
 extension StreamDecrypter on IByteDataDecrypter {
+  /// alternate a [sourceStream] of type `Encrypted` [Uint8List] to
+  /// a `RAW` [Uint8List]
+  ///
+  /// other parameters of this method should be the same as the ones
+  /// used in [EncryptStreamMeta] otherwise the result can be
+  /// **data corruption** or throw an **error**.
   Stream<Uint8List> alterDecryptStream(
     Stream<Uint8List> sourceStream, {
     required EncryptStreamMeta streamMeta,
     bool useBase64 = false,
   }) async* {
-    if (encryptMethod != EncryptMethod.none) {
+    if (encryptMethod != 'NONE') {
       /// this will hold last part of source stream data
       /// this is due to the fact that the source stream will not send data
       /// in predictable chunks or in a predictable order.
@@ -72,5 +77,6 @@ extension StreamDecrypter on IByteDataDecrypter {
     } else {
       yield* sourceStream;
     }
+    reset();
   }
 }

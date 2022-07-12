@@ -14,7 +14,7 @@ import 'package:pointycastle/pointycastle.dart' //
         PublicKeyParameter,
         RSAPublicKey;
 
-import '../stream_cipher.dart' show EncryptMethod, IByteDataEncrypter;
+import '../stream_cipher.dart' show IByteDataEncrypter;
 import 'cipher_utils/rsa/rsa_key_extensions.dart';
 import 'cipher_utils/rsa/rsa_tools.dart';
 
@@ -23,7 +23,7 @@ class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   Uint8List encrypt(Uint8List data) => data;
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.none;
+  String get encryptMethod => 'NONE';
 }
 
 class AESByteDataEncrypter extends IByteDataEncrypter {
@@ -79,7 +79,7 @@ class AESByteDataEncrypter extends IByteDataEncrypter {
   }
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.aes;
+  String get encryptMethod => 'AES';
 }
 
 class RSAByteDataEncrypter extends IByteDataEncrypter {
@@ -89,7 +89,7 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   /// RSA Encrypter instance that is used to encrypt data.
   // final Encrypter _encrypter;
   final RSAEngine _engine;
-
+  int get inputBlocSize => _engine.inputBlockSize;
   RSAByteDataEncrypter({required this.publicKey})
       : _engine = RSAEngine()
           ..init(
@@ -101,7 +101,12 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
 
   /// parse a string into [RSAPublicKey] object
   factory RSAByteDataEncrypter.fromString(String key) {
-    final isPkcs1 = key.split('\n').first == KeyMetaData.BEGIN_RSA_PUBLIC_KEY;
+    final isPkcs1 = key
+            .split(
+              '\n',
+            )
+            .first ==
+        RSAKeyMetaData.BEGIN_RSA_PUBLIC_KEY;
     return RSAByteDataEncrypter(
       publicKey: isPkcs1
           ? RSAKeyTools.rsaPublicKeyFromPemPkcs1(
@@ -121,7 +126,6 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
 
   /// loads public key from a file in sync mode.
   factory RSAByteDataEncrypter.fromFileSync(String fileAddress) {
-    // return parser.parse(key) as T;
     final file = File(fileAddress);
     final key = file.readAsStringSync();
     return RSAByteDataEncrypter.fromString(key);
@@ -131,12 +135,23 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   /// encrypted [Uint8List] using RSA.
   @override
   Uint8List encrypt(Uint8List data) {
+    assert(
+      inputBlocSize >= data.length,
+      '''data bloc size is bigger than expected. given bloc size is (${data.length}), expected bloc size is ($inputBlocSize)''',
+    );
+
     final encrypted = _engine.process(data);
+
     return encrypted;
   }
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.rsa;
+  String get encryptMethod => _engine.algorithmName;
+
+  @override
+  Future<void> reset() async {
+    _engine.reset();
+  }
 }
 
 class GZipByteDataEncoder extends IByteDataEncrypter {
@@ -146,5 +161,29 @@ class GZipByteDataEncoder extends IByteDataEncrypter {
   }
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.gzip;
+  String get encryptMethod => 'GZIP';
+}
+
+class MultiLayerEncrypter extends IByteDataEncrypter {
+  final List<IByteDataEncrypter> _encrypters;
+  MultiLayerEncrypter(
+    List<IByteDataEncrypter> encrypters,
+  ) : _encrypters = encrypters.reversed.toList();
+  @override
+  Uint8List encrypt(Uint8List data) {
+    var result = data;
+    for (final encrypter in _encrypters) {
+      result = encrypter.encrypt(result);
+    }
+    return result;
+  }
+
+  @override
+  String get encryptMethod => _encrypters.reversed
+      .map(
+        (e) => e.encryptMethod,
+      )
+      .join(
+        '->',
+      );
 }

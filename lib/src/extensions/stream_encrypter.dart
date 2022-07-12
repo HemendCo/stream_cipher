@@ -5,7 +5,6 @@ import 'dart:typed_data' show Uint8List;
 
 import '../../stream_cipher.dart' //
     show
-        EncryptMethod,
         EncryptStreamMeta,
         IByteDataEncrypter,
         ListBreaker;
@@ -17,7 +16,7 @@ extension StreamEncryptTools on IByteDataEncrypter {
     required EncryptStreamMeta streamMeta,
     bool useBase64 = false,
   }) async* {
-    if (encryptMethod != EncryptMethod.none) {
+    if (encryptMethod != 'NONE') {
       var isFirst = true;
 
       /// receiving data from source stream.
@@ -57,5 +56,6 @@ extension StreamEncryptTools on IByteDataEncrypter {
     } else {
       yield* sourceStream;
     }
+    reset();
   }
 }
