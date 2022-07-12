@@ -23,7 +23,7 @@ extension StreamDecrypter on IByteDataDecrypter {
       var waiter = <int>[];
 
       await for (final i in sourceStream) {
-        /// adding the last part of older stream data to start of new stream data
+        /// add the last part of older stream data to start of new stream data
         final paddedList = waiter + i;
 
         /// splitting the new stream data into chunks
@@ -37,7 +37,7 @@ extension StreamDecrypter on IByteDataDecrypter {
         /// iterating over the sliced list but last part
         final slices = slicedList.take(slicedList.length - 1);
         for (final part in slices) {
-          /// unloading the part to its binary value by decoding if it was base64
+          /// convert the part to its binary value by decoding if it was base64
           final List<int> effectiveData;
           if (useBase64) {
             effectiveData = base64Decode(String.fromCharCodes(part));
