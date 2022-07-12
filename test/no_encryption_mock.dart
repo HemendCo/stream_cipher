@@ -5,7 +5,7 @@ class _NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   Uint8List encrypt(Uint8List data) => data;
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.test;
+  String get encryptMethod => 'TEST';
 }
 
 class _NoEncryptionByteDataDecrypter extends IByteDataDecrypter {
@@ -13,5 +13,5 @@ class _NoEncryptionByteDataDecrypter extends IByteDataDecrypter {
   Uint8List decrypt(Uint8List data) => data;
 
   @override
-  EncryptMethod get encryptMethod => EncryptMethod.test;
+  String get encryptMethod => 'TEST';
 }

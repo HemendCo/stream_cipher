@@ -11,27 +11,26 @@ part 'no_encryption_mock.dart';
 void main() {
   group('Encryption Tests', () {
     const kRSAPublicKey = '''-----BEGIN PUBLIC KEY-----
-MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHJnzr0orb3n7PF2/uhQUMpUpxuS
-ZNb4Xh7GPrWMWUZNxBdWYPf0P7A56bvqRNoe8oYDYF2nd6HAkglCp2oN1j6nDFaV
-b3mU94CiuGV2U5/0+lKtdkbv+lCTt9+PExoVWJEXlybjllLZuKboZNdJUpBjt0ZU
-cCL0KXjtjrMXngJBAgMBAAE=
+MDwwDQYJKoZIhvcNAQEBBQADKwAwKAIhAMIjTtt6GCD7zFD5wWpjbOpfbYg63mdg
+Vmg0Q34LeT/FAgMBAAE=
 -----END PUBLIC KEY-----''';
-    const kRSAPrivateKey = '''-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgHJnzr0orb3n7PF2/uhQUMpUpxuSZNb4Xh7GPrWMWUZNxBdWYPf0
-P7A56bvqRNoe8oYDYF2nd6HAkglCp2oN1j6nDFaVb3mU94CiuGV2U5/0+lKtdkbv
-+lCTt9+PExoVWJEXlybjllLZuKboZNdJUpBjt0ZUcCL0KXjtjrMXngJBAgMBAAEC
-gYAdfGnJUQGuj2b/OPcr8v9Plo/XSFzbFvpTHi8tZXXg68wdY7LsVTRQ/CwktZV3
-TkCdj6M3oCDyPIqm/lnduKE9/kDCbogNIkyp+eE5XOQhd+8zCzT/N3/Xzpbv1SXU
-+QxIabnM16lDHN+1bl+Da017yu/FhpR8wDYMLwOe1lQhkQJBALTCJuGcWP/WrBFZ
-mK6xAWSsKoVQ/F7DBAYlh6xyUyR+pUtHGfEJd/J2FqAXXXE3haxO2U9lViWJ1uJ8
-01Ah4tUCQQCiBwErSsn50AePPtUNoiECqZAiz2VTQeNwiWE0ddp+b0qozIiJo4gq
-KUs+4F79kp8Ktj6yl+W6aJSVcnNO+t+9AkARkQC4Ujpv+ovUT9G/wGHzR6wGMr2j
-8+3TLxiFUML1u/0SWMGTpCjs/j7qpfqlwxCRk0QZLC74DPI+JoVetzxVAkEAgJE0
-UUjoGc0DopvF7SqALR+lWqndCgKXWb35HuqBdKAUyvp5QVY8/s+DgKIDXgyRHKvd
-9lLnnFHNzQRjEQGqtQJBALNSOnRuXR3yw48wE2YJTu1ofhPXdt9SG3dALnPlOgMF
-Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
------END RSA PRIVATE KEY-----''';
+    const kRSAPrivateKey = '''-----BEGIN PRIVATE KEY-----
+MIHCAgEAMA0GCSqGSIb3DQEBAQUABIGtMIGqAgEAAiEAwiNO23oYIPvMUPnBamNs
+6l9tiDreZ2BWaDRDfgt5P8UCAwEAAQIgUv5nKtqyT/91JDTxY7rnhzcbFopJTB6y
+Ec2CTNUN+U0CEQD03/V921/wANHTb7fG1dMfAhEAyvU/k4VSyP3tvBlQv/wUmwIQ
+D1SiIvIEDJuQh2M8Jzel0wIQdyRRFgCGAIdQL8OMq6cHUQIRAJDViA2ucV7u0wBT
+Nf2I+3s=
+-----END PRIVATE KEY-----''';
 
+    const kRSAPublicPkcs1Key = '''-----BEGIN RSA PUBLIC KEY-----
+MCgCIQCaBSJ+BdvQiyHIP6xphzXr7PAAcaDgcfQ7HiE46kd6kwIDAQAB
+-----END RSA PUBLIC KEY-----''';
+    const kRSAPrivatePkcs1Key = '''-----BEGIN RSA PRIVATE KEY-----
+MIGpAgEAAiEAmgUifgXb0IshyD+saYc16+zwAHGg4HH0Ox4hOOpHepMCAwEAAQIg
+OU9j0ETZ0DWVMnAO9Y1sUHOTd/szRNdAPT7h8jCAKSECEQDNc9okvvM34O+X5Jgz
+csWbAhEAv+ngppV1xvHivojfbGsqaQIQUohirnZC0ES9GwCKn8hQVwIQF6buXfl7
+m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
+-----END RSA PRIVATE KEY-----''';
     var testString = Uint8List(0);
     const streamMeta = EncryptStreamMeta(
       ending: '#ENDING#',
@@ -47,7 +46,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
     });
     group('No Encryption', () {
       test(
-        'Single-Shot ',
+        'Single-Shot',
         () {
           final encrypter = _NoEncryptionByteDataEncrypter();
           final decrypter = _NoEncryptionByteDataDecrypter();
@@ -81,7 +80,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
         },
       );
       test(
-        'Single-Shot (Encrypt only) ',
+        'Single-Shot(Encrypt only) ',
         () {
           final simpleTestText = Uint8List.fromList(
             'Sample text to test encryption basics'.codeUnits,
@@ -92,7 +91,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
         },
       );
       test(
-        'Single-Shot (Decrypt only)',
+        'Single-Shot(Decrypt only)',
         () {
           final simpleTestText = Uint8List.fromList(
             'Sample text to test encryption basics'.codeUnits,
@@ -285,7 +284,7 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
     });
     group('AES', () {
       test(
-        'Single-Shot ',
+        'Single-Shot',
         () {
           final encrypter = AESByteDataEncrypter.randomSecureKey();
           final decrypter = AESByteDataDecrypter(
@@ -323,6 +322,35 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
         },
       );
     });
+    group('AES With base64 ', () {
+      test(
+        'Stream Alter',
+        () async {
+          final encrypter = AESByteDataEncrypter.randomSecureKey();
+          final decrypter = AESByteDataDecrypter(
+            key: encrypter.key,
+            iv: encrypter.iv,
+          );
+          final buffer = <int>[];
+          await for (final part in decrypter.alterDecryptStream(
+            encrypter.alterEncryptStream(
+              Stream.fromIterable(
+                testString
+                    .sliceToPiecesOfSize(1024)
+                    .map((e) => Uint8List.fromList(e.toList())),
+              ),
+              streamMeta: streamMeta,
+              useBase64: true,
+            ),
+            streamMeta: streamMeta,
+            useBase64: true,
+          )) {
+            buffer.addAll(part);
+          }
+          expect(buffer, testString);
+        },
+      );
+    });
 
     group('RSA', () {
       test(
@@ -330,8 +358,10 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
         () {
           final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicKey);
           final decrypter = RSAByteDataDecrypter.fromString(kRSAPrivateKey);
+
           final buffer = <int>[];
-          for (final i in testString.sliceToPiecesOfSize(50)) {
+          for (final i
+              in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
             final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
             final decrypted = decrypter.decrypt(encrypted);
             buffer.addAll(decrypted);
@@ -339,6 +369,17 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
           expect(buffer, testString);
         },
       );
+      test('Encrypt only', () {
+        final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicKey);
+        final buffer = <int>[];
+        for (final i
+            in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+          final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
+          buffer.addAll(encrypted);
+        }
+        expect(buffer, isNot(testString));
+      });
+
       test(
         'Stream Alter',
         () async {
@@ -349,7 +390,184 @@ Dov+DO4lUqWMJ4FWn27u9iUrCw7HWHfjFMIlxtoyc8E=
             encrypter.alterEncryptStream(
               Stream.fromIterable(
                 testString
-                    .sliceToPiecesOfSize(50)
+                    .sliceToPiecesOfSize(encrypter.inputBlocSize)
+                    .map((e) => Uint8List.fromList(e.toList())),
+              ),
+              streamMeta: streamMeta,
+            ),
+            streamMeta: streamMeta,
+          )) {
+            buffer.addAll(part);
+          }
+          expect(buffer, testString);
+        },
+      );
+    });
+    group('RSA with pkcs1 key', () {
+      test(
+        'Single-Shot',
+        () {
+          final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
+          final decrypter =
+              RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+
+          final buffer = <int>[];
+          for (final i
+              in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+            final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
+            final decrypted = decrypter.decrypt(encrypted);
+            buffer.addAll(decrypted);
+          }
+          expect(buffer, testString);
+        },
+      );
+      test('Encrypt only', () {
+        final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
+        final buffer = <int>[];
+        for (final i
+            in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+          final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
+          buffer.addAll(encrypted);
+        }
+        expect(buffer, isNot(testString));
+      });
+
+      test(
+        'Stream Alter',
+        () async {
+          final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
+          final decrypter =
+              RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+          final buffer = <int>[];
+          await for (final part in decrypter.alterDecryptStream(
+            encrypter.alterEncryptStream(
+              Stream.fromIterable(
+                testString
+                    .sliceToPiecesOfSize(encrypter.inputBlocSize)
+                    .map((e) => Uint8List.fromList(e.toList())),
+              ),
+              streamMeta: streamMeta,
+            ),
+            streamMeta: streamMeta,
+          )) {
+            buffer.addAll(part);
+          }
+          expect(buffer, testString);
+        },
+      );
+    });
+    group('GZip', () {
+      test(
+        'Single-Shot',
+        () {
+          final encrypter = GZipByteDataEncoder();
+          final decrypter = GZipByteDataDecoder();
+          final encrypted = encrypter.encrypt(testString);
+          final decrypted = decrypter.decrypt(encrypted);
+          expect(decrypted, testString);
+        },
+      );
+      test(
+        'Stream Alter',
+        () async {
+          final encrypter = GZipByteDataEncoder();
+          final decrypter = GZipByteDataDecoder();
+          final buffer = <int>[];
+          await for (final part in decrypter.alterDecryptStream(
+            encrypter.alterEncryptStream(
+              Stream.fromIterable(
+                testString
+                    .sliceToPiecesOfSize(1024)
+                    .map((e) => Uint8List.fromList(e.toList())),
+              ),
+              streamMeta: streamMeta,
+            ),
+            streamMeta: streamMeta,
+          )) {
+            buffer.addAll(part);
+          }
+          expect(buffer, testString);
+        },
+      );
+    });
+    group('No encryption total', () {
+      test(
+        'Single-Shot',
+        () {
+          final encrypter = NoEncryptionByteDataEncrypter();
+          final decrypter = NoEncryptionByteDataDecrypter();
+          final encrypted = encrypter.encrypt(testString);
+          final decrypted = decrypter.decrypt(encrypted);
+          expect(decrypted, testString);
+        },
+      );
+      test(
+        'Stream Alter',
+        () async {
+          final encrypter = NoEncryptionByteDataEncrypter();
+          final decrypter = NoEncryptionByteDataDecrypter();
+          final buffer = <int>[];
+          await for (final part in decrypter.alterDecryptStream(
+            encrypter.alterEncryptStream(
+              Stream.fromIterable(
+                testString
+                    .sliceToPiecesOfSize(1024)
+                    .map((e) => Uint8List.fromList(e.toList())),
+              ),
+              streamMeta: streamMeta,
+            ),
+            streamMeta: streamMeta,
+          )) {
+            buffer.addAll(part);
+          }
+          expect(buffer, testString);
+        },
+      );
+    });
+    group('MultiLayer', () {
+      test(
+        'Single-Shot',
+        () {
+          final _aesEncrypter = AESByteDataEncrypter.randomSecureKey();
+          final _aesDecrypter = AESByteDataDecrypter(
+            key: _aesEncrypter.key,
+            iv: _aesEncrypter.iv,
+          );
+          final encrypter = MultiLayerEncrypter([
+            GZipByteDataEncoder(),
+            _aesEncrypter,
+          ]);
+          final decrypter = MultiLayerDecrypter([
+            GZipByteDataDecoder(),
+            _aesDecrypter,
+          ]);
+          final encrypted = encrypter.encrypt(testString);
+          final decrypted = decrypter.decrypt(encrypted);
+          expect(decrypted, testString);
+        },
+      );
+      test(
+        'Stream Alter',
+        () async {
+          final _aesEncrypter = AESByteDataEncrypter.randomSecureKey();
+          final _aesDecrypter = AESByteDataDecrypter(
+            key: _aesEncrypter.key,
+            iv: _aesEncrypter.iv,
+          );
+          final encrypter = MultiLayerEncrypter([
+            GZipByteDataEncoder(),
+            _aesEncrypter,
+          ]);
+          final decrypter = MultiLayerDecrypter([
+            GZipByteDataDecoder(),
+            _aesDecrypter,
+          ]);
+          final buffer = <int>[];
+          await for (final part in decrypter.alterDecryptStream(
+            encrypter.alterEncryptStream(
+              Stream.fromIterable(
+                testString
+                    .sliceToPiecesOfSize(1024)
                     .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,

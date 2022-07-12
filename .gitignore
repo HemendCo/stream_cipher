@@ -11,3 +11,5 @@ pubspec.lock
 .vscode/
 test.test
 test/_test_file.exe
+*.pem
+coverage/
