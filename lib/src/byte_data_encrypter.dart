@@ -1,16 +1,16 @@
 library stream_cipher.cipher_models;
 
 import 'dart:io' show File, gzip;
+import 'dart:math' show Random;
 import 'dart:typed_data' show Uint8List;
-import 'package:encrypt/encrypt.dart' //
-    show
-        AES,
-        IV,
-        Encrypter,
-        Key;
+
 import 'package:pointycastle/asymmetric/rsa.dart' show RSAEngine;
+import 'package:pointycastle/block/aes.dart';
+import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/pointycastle.dart' //
     show
+        KeyParameter,
+        ParametersWithIV,
         PublicKeyParameter,
         RSAPublicKey;
 
@@ -30,56 +30,76 @@ class AESByteDataEncrypter extends IByteDataEncrypter {
   /// AESKey is a key that is used to encrypt and decrypt data.
   ///
   /// it is a `two-way` key.
-  final Key key;
+  final Uint8List key;
 
   /// AES-IV is a initialization vector that is used to encrypt and decrypt data
-  final IV iv;
+  final Uint8List iv;
 
   /// AES Encrypter instance that is used to encrypt data.
-  final Encrypter _encrypter;
+  final CBCBlockCipher _engine;
 
   /// A [IByteDataEncrypter] that encrypts data using AES.
   AESByteDataEncrypter({
     required this.key,
     required this.iv,
-  }) : _encrypter = Encrypter(AES(key));
+  }) : _engine = CBCBlockCipher(AESEngine())
+          ..init(
+            true,
+            ParametersWithIV(
+              KeyParameter(key),
+              iv,
+            ),
+          );
 
   /// create [AESByteDataEncrypter] instance with
-  /// utf8 [String] of [Key] and [IV]
+  /// utf8 [String] of key and utf8 [String] of iv.
   factory AESByteDataEncrypter.fromString({
     required String key,
     required String iv,
   }) =>
       AESByteDataEncrypter(
-        key: Key.fromUtf8(key),
-        iv: IV.fromUtf8(iv),
+        key: Uint8List.fromList(key.codeUnits),
+        iv: Uint8List.fromList(iv.codeUnits),
       );
 
-  /// create [AESByteDataEncrypter] instance with random secure [Key] and [IV]
+  /// create [AESByteDataEncrypter] instance with random secure `key` and `iv`.
   ///
   /// consider saving the [key] and [iv] after using this method.
   /// this values will be lost if you don't store them.
   factory AESByteDataEncrypter.randomSecureKey() => AESByteDataEncrypter(
-        key: Key.fromSecureRandom(32),
-        iv: IV.fromSecureRandom(16),
+        key: Uint8List.fromList(
+          List<int>.generate(32, (i) => Random.secure().nextInt(255)).toList(),
+        ),
+        iv: Uint8List.fromList(
+          List<int>.generate(16, (i) => Random.secure().nextInt(255)).toList(),
+        ),
       );
 
   /// lowest security level. only use in development.
   factory AESByteDataEncrypter.empty() => AESByteDataEncrypter(
-        key: Key.fromLength(32),
-        iv: IV.fromLength(16),
+        key: Uint8List(32),
+        iv: Uint8List(16),
       );
 
   /// encrypt method that receives a [Uint8List] and then
   /// returns an encrypted [Uint8List]
   @override
   Uint8List encrypt(Uint8List data) {
-    final encrypted = _encrypter.encryptBytes(data, iv: iv);
-    return encrypted.bytes;
+    final buffer = Uint8List.fromList(<int>[
+      ...data,
+      if (data.length % 16 != 0) ...List<int>.filled(16 - data.length % 16, 0),
+    ]);
+    final destination = Uint8List(buffer.length); // allocate space
+    var offset = 0;
+    while (offset < buffer.length) {
+      offset += _engine.processBlock(buffer, offset, destination, offset);
+    }
+    assert(offset == buffer.length);
+    return destination;
   }
 
   @override
-  String get encryptMethod => 'AES';
+  String get encryptMethod => _engine.algorithmName;
 }
 
 class RSAByteDataEncrypter extends IByteDataEncrypter {

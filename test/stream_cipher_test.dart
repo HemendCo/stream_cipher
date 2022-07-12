@@ -309,7 +309,7 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
             encrypter.alterEncryptStream(
               Stream.fromIterable(
                 testString
-                    .sliceToPiecesOfSize(1024)
+                    .sliceToPiecesOfSize(16)
                     .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,

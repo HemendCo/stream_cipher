@@ -1,22 +1,20 @@
 library stream_cipher.cipher_models;
 
 import 'dart:io' show File, gzip;
+import 'dart:math' show Random;
 import 'dart:typed_data' show Uint8List;
-import 'package:encrypt/encrypt.dart' //
-    show
-        AES,
-        Encrypted,
-        Encrypter,
-        IV,
-        Key;
-import 'package:pointycastle/asymmetric/rsa.dart';
+import 'package:pointycastle/asymmetric/rsa.dart' show RSAEngine;
+import 'package:pointycastle/block/aes.dart' show AESEngine;
+import 'package:pointycastle/block/modes/cbc.dart' show CBCBlockCipher;
 import 'package:pointycastle/pointycastle.dart' //
     show
+        KeyParameter,
+        ParametersWithIV,
         PrivateKeyParameter,
         RSAPrivateKey;
 
-import 'cipher_utils/rsa/rsa_key_extensions.dart';
-import 'cipher_utils/rsa/rsa_tools.dart';
+import 'cipher_utils/rsa/rsa_key_extensions.dart' show RSAKeyMetaData;
+import 'cipher_utils/rsa/rsa_tools.dart' show RSAKeyTools;
 import 'stream_cipher_base.dart' show IByteDataDecrypter;
 
 class NoEncryptionByteDataDecrypter extends IByteDataDecrypter {
@@ -31,56 +29,80 @@ class AESByteDataDecrypter extends IByteDataDecrypter {
   /// AESKey is a key that is used to encrypt and decrypt data.
   ///
   /// it is a `two-way` key.
-  final Key key;
+  final Uint8List key;
 
   /// AES-IV is a initialization vector that is used to encrypt and decrypt data
-  final IV iv;
+  final Uint8List iv;
 
   /// AES Decrypter instance that is used to encrypt data.
-  final Encrypter _decrypter;
+  final CBCBlockCipher _engine;
 
   /// A [IByteDataDecrypter] that encrypts data using AES.
   AESByteDataDecrypter({
     required this.key,
     required this.iv,
-  }) : _decrypter = Encrypter(AES(key));
+  }) : _engine = CBCBlockCipher(AESEngine())
+          ..init(
+            false,
+            ParametersWithIV(
+              KeyParameter(key),
+              iv,
+            ),
+          );
 
-  /// create [AESByteDataDecrypter] instance with
-  /// utf8 [String] of [Key] and [IV]
+  /// create [AESByteDataDecrypter] instance with String key and String iv.
   factory AESByteDataDecrypter.fromString({
     required String key,
     required String iv,
   }) =>
       AESByteDataDecrypter(
-        key: Key.fromUtf8(key),
-        iv: IV.fromUtf8(iv),
+        key: Uint8List.fromList(key.codeUnits),
+        iv: Uint8List.fromList(iv.codeUnits),
       );
 
-  /// create [AESByteDataDecrypter] instance with random secure [Key] and [IV]
+  /// create [AESByteDataDecrypter] instance with random secure `key` and `iv`.
   ///
   /// consider saving the [key] and [iv] after using this method.
   /// this values will be lost if you don't store them.
   factory AESByteDataDecrypter.randomSecureKey() => AESByteDataDecrypter(
-        key: Key.fromSecureRandom(32),
-        iv: IV.fromSecureRandom(16),
+        key: Uint8List.fromList(
+          List<int>.generate(32, (i) => Random.secure().nextInt(255)).toList(),
+        ),
+        iv: Uint8List.fromList(
+          List<int>.generate(16, (i) => Random.secure().nextInt(255)).toList(),
+        ),
       );
 
   /// lowest security level. only use in development.
   factory AESByteDataDecrypter.empty() => AESByteDataDecrypter(
-        key: Key.fromLength(32),
-        iv: IV.fromLength(16),
+        key: Uint8List(32),
+        iv: Uint8List(16),
       );
 
   /// encrypt method that receives a [Uint8List] and then
   /// returns an encrypted [Uint8List]
   @override
   Uint8List decrypt(Uint8List data) {
-    final encrypted = _decrypter.decryptBytes(Encrypted(data), iv: iv);
-    return Uint8List.fromList(encrypted);
+    final paddedPlainText = Uint8List(data.length); // allocate space
+
+    var offset = 0;
+    while (offset < data.length) {
+      offset += _engine.processBlock(data, offset, paddedPlainText, offset);
+    }
+    assert(offset == data.length);
+
+    return Uint8List.fromList(
+      paddedPlainText.where((byte) => byte != 0).toList(),
+    );
   }
 
   @override
-  String get encryptMethod => 'AES';
+  Future<void> reset() async {
+    _engine.reset();
+  }
+
+  @override
+  String get encryptMethod => _engine.algorithmName;
 }
 
 class RSAByteDataDecrypter extends IByteDataDecrypter {
