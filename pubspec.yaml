@@ -1,7 +1,7 @@
 name: stream_cipher
 description: A library to encrypt and decrypt ByteLists and ByteLists Streams
   initially comes with DioHttpClientAdapter
-repository: https://github.com/FMotalleb/stream_cipher
+repository: https://github.com/HemendCo/stream_cipher
 version: 1.1.2
 
 environment:
