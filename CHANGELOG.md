@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.3
+
+- added extensions for `RSAPublicKey` and `RSAPrivateKey` to export them to `PEM` format
+
+- added `RSAKeyTools` abstract class to provide common methods to load `RSAPublicKey` and `RSAPrivateKey` from `PEM` format
+
 ## 1.1.2
 
 - added `FileMode` to `SecureFile` writer to support appending to files
