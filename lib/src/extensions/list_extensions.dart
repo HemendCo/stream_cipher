@@ -1,7 +1,10 @@
 library stream_cipher.extensions;
 
 extension ListBreaker<T> on List<T> {
-  /// split the list by given sublist
+  /// split the list by given [splitter] as breaker
+  ///
+  /// this method will remove [splitter]s from the list and
+  /// returns an [Iterable] of other parts
   Iterable<Iterable<T>> splitByPart(List<T> splitter) {
     final parts = <Iterable<T>>[];
     if (length < splitter.length) {
@@ -31,7 +34,12 @@ extension ListBreaker<T> on List<T> {
     return parts;
   }
 
-  /// will slice the list by given length
+  /// will slice the list by given [pieceSize]
+  ///
+  /// if [strict] was set to true will force all of sublists to have same size
+  ///
+  /// in this case if sublists was not in correct shape it will fill the last
+  /// sublist with given [fillEmptyWith] to match the size
   Iterable<Iterable<T>> sliceToPiecesOfSize(
     int pieceSize, {
     bool strict = false,
@@ -63,24 +71,6 @@ extension ListBreaker<T> on List<T> {
       } else {
         result.add(current);
       }
-    }
-    return result;
-  }
-
-  Iterable<Iterable<T>> breakToPiecesOfSizes(List<int> pieceSizes) {
-    final result = <Iterable<T>>[];
-    var pieceIndex = 0;
-    var current = <T>[];
-    for (final item in this) {
-      current.add(item);
-      if (current.length == pieceSizes[pieceIndex]) {
-        pieceIndex++;
-        result.add(current);
-        current = <T>[];
-      }
-    }
-    if (current.isNotEmpty) {
-      result.add(current);
     }
     return result;
   }
