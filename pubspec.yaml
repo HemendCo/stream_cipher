@@ -20,3 +20,4 @@ dependencies:
 
 false_secrets:
   - test/stream_cipher_test.dart
+  - test/secure_file_test.dart
