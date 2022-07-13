@@ -12,7 +12,16 @@ import '../../../stream_cipher.dart' //
         ListBreaker,
         StreamDecrypter,
         StreamEncryptTools;
+import '../../byte_data_decrypter.dart' //
+    show
+        Base64ByteDataDecoder,
+        MultiLayerDecrypter;
+import '../../byte_data_encrypter.dart' //
+    show
+        Base64ByteDataEncoder,
+        MultiLayerEncrypter;
 
+/// a link for a file that writes and reads `encrypted`\`decrypted` data
 class SecureFile {
   /// attached file
   final File file;
@@ -25,19 +34,40 @@ class SecureFile {
   final EncryptStreamMeta streamMeta;
   final bool useBase64;
   final int maxBlockSize;
+
+  /// creating an instance of [SecureFile] with given [file]
+  ///
+  /// if [useBase64] is true de/encrypter will have an other stage with
+  /// [Base64ByteDataDecoder] and [Base64ByteDataEncoder]
+  /// so if you are using any kind of `RSA` methods in input it may print some
+  /// warning
   SecureFile(
     this.file, {
     this.maxBlockSize = 1024,
-    required this.encrypter,
-    required this.decrypter,
+    required IByteDataEncrypter encrypter,
+    required IByteDataDecrypter decrypter,
     this.useBase64 = false,
     this.streamMeta = const EncryptStreamMeta.sameSeparatorAsEnding(
       '#SEPARATOR#',
     ),
-  }) : assert(
+  })  : assert(
           encrypter.encryptMethod == decrypter.encryptMethod,
           '''both of encrypter and decrypter in secure file must use same method.''',
-        );
+        ),
+        encrypter = useBase64
+            ? MultiLayerEncrypter([
+                Base64ByteDataEncoder(),
+                encrypter,
+              ])
+            : encrypter,
+        decrypter = useBase64
+            ? MultiLayerDecrypter([
+                Base64ByteDataDecoder(),
+                decrypter,
+              ])
+            : decrypter;
+
+  /// creating an instance with given path
   factory SecureFile.fromPath(
     String path, {
     required IByteDataEncrypter encrypter,
@@ -54,6 +84,9 @@ class SecureFile {
         useBase64: useBase64,
         maxBlockSize: maxBlockSize,
       );
+
+  /// writes [Stream] of binary data into the file
+  /// encrypts data before writing into the file
   Future<void> write(
     Stream<Uint8List> data, {
     int? blockSize,
@@ -71,7 +104,6 @@ class SecureFile {
             event.toList(),
           ),
         ),
-        useBase64: useBase64,
         maxBlockSize: blockSize ?? maxBlockSize,
         streamMeta: streamMeta,
       ),
@@ -79,14 +111,17 @@ class SecureFile {
     fileWriter.close();
   }
 
+  /// read [Stream] binary data from file and decrypt it
   Stream<Uint8List> read() {
     return decrypter.alterDecryptStream(
       file.openRead().map(Uint8List.fromList),
       streamMeta: streamMeta,
-      useBase64: useBase64,
     );
   }
 
+  /// encrypt and write a list of binary data into the file
+  ///
+  /// **if you are changing [mode] make sure to test it**
   Future<void> writeByteArray(
     Uint8List data, {
     int? blockSize,
@@ -107,12 +142,16 @@ class SecureFile {
     );
   }
 
+  /// reads and decrypt binary data from the file
   Future<Uint8List> readByteArray() async {
     final buffer = <int>[];
     await read().forEach(buffer.addAll);
     return Uint8List.fromList(buffer);
   }
 
+  /// encrypt and write a list of [String] [data] into the file
+  ///
+  /// **if you are changing [mode] make sure to test it**
   Future<void> writeString(
     String data, {
     int? blockSize,
@@ -127,6 +166,7 @@ class SecureFile {
     );
   }
 
+  /// reads and decrypt [String] data from the file
   Future<String> readString() async {
     return String.fromCharCodes(await readByteArray());
   }
