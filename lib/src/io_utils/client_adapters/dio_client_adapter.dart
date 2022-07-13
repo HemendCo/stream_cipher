@@ -87,9 +87,12 @@ class CipherDioHttpAdapter extends HttpClientAdapter {
     this.maximumPartSize = 1024,
   }) : _baseAdapter = baseAdapter ?? Dio().httpClientAdapter;
 
+  /// since closing do not need any change will close the base adapter
   @override
   void close({bool force = false}) => _baseAdapter.close(force: force);
 
+  /// overriding the fetch method to encrypt sending data and decrypt output
+  /// result stream. in this phase it only works on bode of request and response
   @override
   Future<ResponseBody> fetch(
     RequestOptions options,
@@ -103,7 +106,6 @@ class CipherDioHttpAdapter extends HttpClientAdapter {
         /// removing `content-length` from header to
         /// avoid `content length mismatch` issue.
         'content-length': null,
-        'type_id': useBase64 ? 1 : 0,
       },
     );
 
