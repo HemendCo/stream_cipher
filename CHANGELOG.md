@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.1
+
+- fixed secure file base64
+
 ## 1.2.0
 
 - removed `Gzip` de/encoder
