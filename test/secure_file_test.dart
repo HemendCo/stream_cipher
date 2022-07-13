@@ -31,7 +31,8 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
       //   iv: _aesEncrypter.iv,
       // );
       final _rsaEncrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
-      final _rsaDecrypter = RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+      final _rsaDecrypter =
+          RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
 
       final encrypter = MultiLayerEncrypter([
         _rsaEncrypter,
