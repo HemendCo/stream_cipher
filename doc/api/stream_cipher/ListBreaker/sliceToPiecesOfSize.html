@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the sliceToPiecesOfSize method from the ListBreaker extension, for the Dart programming language.">
+  <title>sliceToPiecesOfSize method - ListBreaker extension - stream_cipher library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">stream_cipher</a></li>
+    <li><a href="../../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+    <li><a href="../../stream_cipher/ListBreaker.html">ListBreaker<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li class="self-crumb">sliceToPiecesOfSize method</li>
+  </ol>
+  <div class="self-name">sliceToPiecesOfSize</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">sliceToPiecesOfSize</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span>
+<span class="name ">sliceToPiecesOfSize</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="sliceToPiecesOfSize-param-pieceSize"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.5/dart-core/int-class.html">int</a></span> <span class="parameter-name">pieceSize</span>, </span></li>
+<li><span class="parameter" id="sliceToPiecesOfSize-param-strict">{<span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.5/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">strict</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="sliceToPiecesOfSize-param-fillEmptyWith"><span class="type-annotation">T?</span> <span class="parameter-name">fillEmptyWith</span>}</span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>will slice the list by given <code>pieceSize</code></p>
+<p>if <code>strict</code> was set to true will force all of sublists to have same size</p>
+<p>in this case if sublists was not in correct shape it will fill the last
+sublist with given <code>fillEmptyWith</code> to match the size</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Iterable&lt;Iterable&lt;T&gt;&gt; sliceToPiecesOfSize(
+  int pieceSize, {
+  bool strict = false,
+  T? fillEmptyWith,
+}) {
+  final result = &lt;Iterable&lt;T&gt;&gt;[];
+  var current = &lt;T&gt;[];
+  for (final item in this) {
+    current.add(item);
+    if (current.length == pieceSize) {
+      result.add(current);
+      current = &lt;T&gt;[];
+    }
+  }
+  if (current.isNotEmpty) {
+    if (strict) {
+      if (fillEmptyWith == null) {
+        throw Exception(
+          &#39;&#39;&#39;size of list ($length) is not a multiple of $pieceSize and no filler passed to fill the empty space try passing `fillEmptyWith: &lt;$T&gt;`&#39;&#39;&#39;,
+        );
+      }
+      result.add([
+        ...current,
+        ...List&lt;T&gt;.filled(
+          pieceSize - current.length,
+          fillEmptyWith,
+        ),
+      ]);
+    } else {
+      result.add(current);
+    }
+  }
+  return result;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">stream_cipher</a></li>
+  <li><a href="../../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+  <li><a href="../../stream_cipher/ListBreaker.html">ListBreaker<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+  <li class="self-crumb">sliceToPiecesOfSize method</li>
+</ol>
+
+
+    <h5>ListBreaker extension</h5>
+    <ol>
+
+
+
+
+
+    <li class="section-title"><a href="../../stream_cipher/ListBreaker.html#instance-methods">Methods</a></li>
+    <li><a href="../../stream_cipher/ListBreaker/sliceToPiecesOfSize.html">sliceToPiecesOfSize</a></li>
+    <li><a href="../../stream_cipher/ListBreaker/splitByPart.html">splitByPart</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    stream_cipher
+      1.1.4
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the alterEncryptStream method from the StreamEncryptTools extension, for the Dart programming language.">
+  <title>alterEncryptStream method - StreamEncryptTools extension - stream_cipher library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">stream_cipher</a></li>
+    <li><a href="../../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+    <li><a href="../../stream_cipher/StreamEncryptTools.html">StreamEncryptTools</a></li>
+    <li class="self-crumb">alterEncryptStream method</li>
+  </ol>
+  <div class="self-name">alterEncryptStream</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">alterEncryptStream</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.5/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.5/dart-typed_data/Uint8List-class.html">Uint8List</a></span>&gt;</span></span>
+<span class="name ">alterEncryptStream</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="alterEncryptStream-param-sourceStream"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.5/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.5/dart-typed_data/Uint8List-class.html">Uint8List</a></span>&gt;</span></span> <span class="parameter-name">sourceStream</span>, </span></li>
+<li><span class="parameter" id="alterEncryptStream-param-maxBlockSize">{<span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.5/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxBlockSize</span> = <span class="default-value">1024</span>, </span></li>
+<li><span class="parameter" id="alterEncryptStream-param-streamMeta"><span>required</span> <span class="type-annotation"><a href="../../stream_cipher/EncryptStreamMeta-class.html">EncryptStreamMeta</a></span> <span class="parameter-name">streamMeta</span>, </span></li>
+<li><span class="parameter" id="alterEncryptStream-param-useBase64"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.5/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useBase64</span> = <span class="default-value">false</span>}</span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>alternate source stream of binary data into encrypted stream</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Stream&lt;Uint8List&gt; alterEncryptStream(
+  Stream&lt;Uint8List&gt; sourceStream, {
+  int maxBlockSize = 1024,
+  required EncryptStreamMeta streamMeta,
+  bool useBase64 = false,
+}) async* {
+  if (encryptMethod != &#39;NONE&#39;) {
+    var isFirst = true;
+
+    &#47;&#47;&#47; receiving data from source stream.
+    await for (final sourceStreamData in sourceStream) {
+      &#47;&#47; yield Uint8List.fromList(streamMeta.beginning.codeUnits);
+
+      &#47;&#47;&#47; breaking [effectiveData] into parts of maximumSize.
+      &#47;&#47;&#47; remember the last part may be smaller than maximumSize.
+      final sliceToPiecesOfSize = sourceStreamData.sliceToPiecesOfSize(
+        maxBlockSize,
+      );
+      for (final dataPart in sliceToPiecesOfSize) {
+        if (isFirst) {
+          isFirst = false;
+        } else {
+          yield Uint8List.fromList(streamMeta.separator.codeUnits);
+        }
+
+        &#47;&#47;&#47; encrypting data part.
+        final encrypted = encrypt(Uint8List.fromList(dataPart.toList()));
+
+        &#47;&#47;&#47; detects if the data needs to be converted to base64 or not.
+        final List&lt;int&gt; effectiveData;
+        if (useBase64) {
+          effectiveData = base64Encode(encrypted).codeUnits;
+        } else {
+          effectiveData = encrypted;
+        }
+
+        &#47;&#47;&#47; yielding encrypted data part.
+        yield Uint8List.fromList(effectiveData);
+      }
+    }
+
+    &#47;&#47;&#47; adding pad to end of body
+    yield Uint8List.fromList(streamMeta.ending.codeUnits);
+  } else {
+    yield* sourceStream;
+  }
+  reset();
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">stream_cipher</a></li>
+  <li><a href="../../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+  <li><a href="../../stream_cipher/StreamEncryptTools.html">StreamEncryptTools</a></li>
+  <li class="self-crumb">alterEncryptStream method</li>
+</ol>
+
+
+    <h5>StreamEncryptTools extension</h5>
+    <ol>
+
+
+
+
+
+    <li class="section-title"><a href="../../stream_cipher/StreamEncryptTools.html#instance-methods">Methods</a></li>
+    <li><a href="../../stream_cipher/StreamEncryptTools/alterEncryptStream.html">alterEncryptStream</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    stream_cipher
+      1.1.4
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

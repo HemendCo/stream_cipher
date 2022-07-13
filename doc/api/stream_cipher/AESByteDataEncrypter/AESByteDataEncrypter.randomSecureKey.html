@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the AESByteDataEncrypter.randomSecureKey constructor from Class AESByteDataEncrypter from the stream_cipher library, for the Dart programming language.">
+  <title>AESByteDataEncrypter.randomSecureKey constructor - AESByteDataEncrypter - stream_cipher library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">stream_cipher</a></li>
+    <li><a href="../../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+    <li><a href="../../stream_cipher/AESByteDataEncrypter-class.html">AESByteDataEncrypter</a></li>
+    <li class="self-crumb">AESByteDataEncrypter.randomSecureKey factory constructor</li>
+  </ol>
+  <div class="self-name">AESByteDataEncrypter.randomSecureKey</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-constructor">AESByteDataEncrypter.randomSecureKey</span> constructor 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      <span class="name ">AESByteDataEncrypter.randomSecureKey</span>(<wbr>)
+    </section>
+
+    
+<section class="desc markdown">
+  <p>create <a href="../../stream_cipher/AESByteDataEncrypter-class.html">AESByteDataEncrypter</a> instance with random secure <code>key</code> and <code>iv</code>.</p>
+<p>consider saving the <a href="../../stream_cipher/AESByteDataEncrypter/key.html">key</a> and <a href="../../stream_cipher/AESByteDataEncrypter/iv.html">iv</a> after using this method.
+this values will be lost if you don't store them.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">factory AESByteDataEncrypter.randomSecureKey() =&gt; AESByteDataEncrypter(
+      key: Uint8List.fromList(
+        List&lt;int&gt;.generate(32, (i) =&gt; Random.secure().nextInt(255)).toList(),
+      ),
+      iv: Uint8List.fromList(
+        List&lt;int&gt;.generate(16, (i) =&gt; Random.secure().nextInt(255)).toList(),
+      ),
+    );</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">stream_cipher</a></li>
+  <li><a href="../../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+  <li><a href="../../stream_cipher/AESByteDataEncrypter-class.html">AESByteDataEncrypter</a></li>
+  <li class="self-crumb">AESByteDataEncrypter.randomSecureKey factory constructor</li>
+</ol>
+
+
+    <h5>AESByteDataEncrypter class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../stream_cipher/AESByteDataEncrypter-class.html#constructors">Constructors</a></li>
+          <li><a href="../../stream_cipher/AESByteDataEncrypter/AESByteDataEncrypter.html">AESByteDataEncrypter</a></li>
+          <li><a href="../../stream_cipher/AESByteDataEncrypter/AESByteDataEncrypter.empty.html">empty</a></li>
+          <li><a href="../../stream_cipher/AESByteDataEncrypter/AESByteDataEncrypter.fromString.html">fromString</a></li>
+          <li><a href="../../stream_cipher/AESByteDataEncrypter/AESByteDataEncrypter.randomSecureKey.html">randomSecureKey</a></li>
+
+
+    <li class="section-title">
+      <a href="../../stream_cipher/AESByteDataEncrypter-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../stream_cipher/AESByteDataEncrypter/encryptMethod.html">encryptMethod</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../stream_cipher/AESByteDataEncrypter/iv.html">iv</a></li>
+    <li><a href="../../stream_cipher/AESByteDataEncrypter/key.html">key</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../stream_cipher/AESByteDataEncrypter-class.html#instance-methods">Methods</a></li>
+    <li class="inherited"><a href="../../stream_cipher/IByteDataEncrypter/alterHeader.html">alterHeader</a></li>
+    <li><a href="../../stream_cipher/AESByteDataEncrypter/encrypt.html">encrypt</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li class="inherited"><a href="../../stream_cipher/IByteDataEncrypter/reset.html">reset</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../stream_cipher/AESByteDataEncrypter-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.5/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    stream_cipher
+      1.1.4
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 5.1.0-dev">
+  <meta name="description" content="stream_cipher API docs, for the Dart programming language.">
+  <title>stream_cipher - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href=""
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">stream_cipher package</li>
+  </ol>
+  <div class="self-name">stream_cipher</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <p>this package can be used to encrypt/decrypt data in stream form (e.g. HTTP, IO,etc)</p>
+<p>this package initially comes with a http client adapter for <code>Dio</code> library.</p>
+<h3 id="secure-file">Secure File</h3>
+<blockquote>
+<p>example:</p>
+<pre class="language-Dart"><code class="language-Dart">final secureFile = SecureFile(
+   File('example'),
+   encrypter: encrypter,
+   decrypter: decrypter,
+   useBase64: true,
+   maxBlockSize: 4096,
+ );
+</code></pre>
+<p><strong>supports</strong>:</p>
+<ul>
+<li><code>Stream&lt;Uint8List&gt;</code> read/write</li>
+<li><code>Uint8List</code> read/write</li>
+<li><code>String</code> read/write</li>
+</ul>
+<p><strong>Notes</strong>:</p>
+<blockquote>
+<ul>
+<li>
+<p>de/encryption is done while read/writing meaning data will not be de/encrypted until that part of data is read/written.</p>
+</li>
+<li>
+<p>both of de/encrypter use same method. <strong>Note</strong>: for internal encrypters like <code>AES,RSA,Gzip,NoEncryption</code> it has an assertion but if you extend De/Encrypter you need to test it inside your app. in some cases this may seems ok but in action during reading the file content may cause an error or even <strong>data corruption</strong>.</p>
+</li>
+<li>
+<p>this does not extend <code>File</code> class.</p>
+</li>
+<li>
+<p><code>write</code> methods support appending to file. but in this case you need to pass a <code>EncryptStreamMeta</code> to constructor with <code>Separator</code> and <code>Ending</code> with same value using <code>EncryptStreamMeta.sameSeparatorAsEnding('....... separator .......')</code>.</p>
+</li>
+<li>
+<p>due to high load of some algorithms during de/encryption this class does not support synchronous read/write.</p>
+</li>
+<li>
+<p>methods in this class are not running inside an isolate and therefore may cause performance issues.</p>
+</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="diohttpadapter">DioHttpAdapter</h2>
+<blockquote>
+<pre class="language-Dart"><code class="language-Dart">/// create instance of `CipherDioHttpAdapter`
+final dioClient = CipherDioHttpAdapter(
+     decrypter: decrypter,
+     encrypter: encrypter,
+   );
+/// creating an instance of `Dio` with `CipherDioHttpAdapter`
+final dio = Dio()..httpClientAdapter = dioClient;
+</code></pre>
+<blockquote>
+<ul>
+<li>
+<p>in this method only the body of the request is encrypted.</p>
+</li>
+<li>
+<p>in this method only the body of the response is decrypted.</p>
+</li>
+<li>
+<p>the header of request is not encrypted. to deform the header of request, you can extend one of <code>IByteDataEncrypter</code>s and override the <code>alterHeader</code> method to do so.</p>
+</li>
+</ul>
+</blockquote>
+</blockquote>
+<p>for backend side you can check example of this project</p>
+<h2 id="example-of-deencrypter">Example of De/Encrypter</h2>
+<blockquote>
+<p>to create instance of de/encrypter</p>
+<pre class="language-Dart"><code class="language-Dart">final encrypter = AESByteDataEncrypter.randomSecureKey();
+final decrypter = AESByteDataDecrypter(
+  key: encrypter.key,
+  iv: encrypter.iv,
+);
+</code></pre>
+</blockquote>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="stream_cipher">
+  <span class="name"><a href="stream_cipher/stream_cipher-library.html">stream_cipher</a></span> 
+
+</dt>
+<dd>This is the main entry point to the stream cipher library API.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li class="self-crumb">stream_cipher package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">stream_cipher</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    stream_cipher
+      1.1.4
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

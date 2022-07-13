@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="stream_cipher library API docs, for the Dart programming language.">
+  <title>stream_cipher library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">stream_cipher</a></li>
+    <li class="self-crumb">stream_cipher library</li>
+  </ol>
+  <div class="self-name">stream_cipher</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-library">stream_cipher</span> library 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>This is the main entry point to the stream cipher library API.</p>
+<p>It includes the following libraries:</p>
+<ul>
+<li><strong>decrypter.dart</strong> = models used for decryption</li>
+<li><strong>encrypter.dart</strong> = models used for encryption</li>
+<li><strong>./extensions/.</strong> = useful extensions</li>
+<li><strong>base.dart</strong> = interface of en/decryption models</li>
+<li><strong>models.dart</strong> = helper models like meta data</li>
+</ul>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+
+      <dl>
+        <dt id="AESByteDataDecrypter">
+  <span class="name "><a href="../stream_cipher/AESByteDataDecrypter-class.html">AESByteDataDecrypter</a></span> 
+
+</dt>
+<dd>
+  AES ByteData decrypter with CBC mode
+</dd>
+
+        <dt id="AESByteDataEncrypter">
+  <span class="name "><a href="../stream_cipher/AESByteDataEncrypter-class.html">AESByteDataEncrypter</a></span> 
+
+</dt>
+<dd>
+  an <a href="../stream_cipher/IByteDataEncrypter-class.html">IByteDataEncrypter</a> that uses <code>PointyCastle</code>'s <code>CBC/AES</code> method
+to encode data.
+</dd>
+
+        <dt id="Base64ByteDataDecoder">
+  <span class="name "><a href="../stream_cipher/Base64ByteDataDecoder-class.html">Base64ByteDataDecoder</a></span> 
+
+</dt>
+<dd>
+  a simple base64 decoder.
+</dd>
+
+        <dt id="Base64ByteDataEncoder">
+  <span class="name "><a href="../stream_cipher/Base64ByteDataEncoder-class.html">Base64ByteDataEncoder</a></span> 
+
+</dt>
+<dd>
+  simple <code>Base64</code> byte data encoder
+</dd>
+
+        <dt id="EncryptStreamMeta">
+  <span class="name "><a href="../stream_cipher/EncryptStreamMeta-class.html">EncryptStreamMeta</a></span> 
+
+</dt>
+<dd>
+  hold value of <a href="../stream_cipher/EncryptStreamMeta/separator.html">separator</a> and <a href="../stream_cipher/EncryptStreamMeta/ending.html">ending</a> of a streamed data
+</dd>
+
+        <dt id="IByteDataDecrypter">
+  <span class="name "><a href="../stream_cipher/IByteDataDecrypter-class.html">IByteDataDecrypter</a></span> 
+
+</dt>
+<dd>
+  abstract of the Decrypter model
+</dd>
+
+        <dt id="IByteDataEncrypter">
+  <span class="name "><a href="../stream_cipher/IByteDataEncrypter-class.html">IByteDataEncrypter</a></span> 
+
+</dt>
+<dd>
+  abstract of the encrypter model
+</dd>
+
+        <dt id="MultiLayerDecrypter">
+  <span class="name "><a href="../stream_cipher/MultiLayerDecrypter-class.html">MultiLayerDecrypter</a></span> 
+
+</dt>
+<dd>
+  <a href="../stream_cipher/MultiLayerDecrypter-class.html">MultiLayerDecrypter</a> can be used to concat a list of decrypters together
+</dd>
+
+        <dt id="MultiLayerEncrypter">
+  <span class="name "><a href="../stream_cipher/MultiLayerEncrypter-class.html">MultiLayerEncrypter</a></span> 
+
+</dt>
+<dd>
+  <a href="../stream_cipher/MultiLayerEncrypter-class.html">MultiLayerEncrypter</a> can be used to concat a list of encrypters together
+</dd>
+
+        <dt id="NoEncryptionByteDataDecrypter">
+  <span class="name "><a href="../stream_cipher/NoEncryptionByteDataDecrypter-class.html">NoEncryptionByteDataDecrypter</a></span> 
+
+</dt>
+<dd>
+  this class will not decrypt/decode anything
+</dd>
+
+        <dt id="NoEncryptionByteDataEncrypter">
+  <span class="name "><a href="../stream_cipher/NoEncryptionByteDataEncrypter-class.html">NoEncryptionByteDataEncrypter</a></span> 
+
+</dt>
+<dd>
+  this class will not encrypt/encode anything
+</dd>
+
+        <dt id="RSAByteDataDecrypter">
+  <span class="name "><a href="../stream_cipher/RSAByteDataDecrypter-class.html">RSAByteDataDecrypter</a></span> 
+
+</dt>
+<dd>
+  RSA ByteData decrypter with RSA-OAEP
+</dd>
+
+        <dt id="RSAByteDataEncrypter">
+  <span class="name "><a href="../stream_cipher/RSAByteDataEncrypter-class.html">RSAByteDataEncrypter</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+      </dl>
+    </section>
+
+
+    <section class="summary offset-anchor" id="extensions">
+      <h2>Extensions</h2>
+
+      <dl>
+        <dt id="ListBreaker">
+    <span class="name "><a href="../stream_cipher/ListBreaker.html">ListBreaker</a></span> 
+
+</dt>
+<dd>
+    
+</dd>
+
+
+        <dt id="StreamDecrypter">
+    <span class="name "><a href="../stream_cipher/StreamDecrypter.html">StreamDecrypter</a></span> 
+
+</dt>
+<dd>
+    
+</dd>
+
+
+        <dt id="StreamEncryptTools">
+    <span class="name "><a href="../stream_cipher/StreamEncryptTools.html">StreamEncryptTools</a></span> 
+
+</dt>
+<dd>
+    
+</dd>
+
+
+      </dl>
+    </section>
+
+
+
+
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">stream_cipher</a></li>
+  <li class="self-crumb">stream_cipher library</li>
+</ol>
+
+
+    <h5><span class="package-name">stream_cipher</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../stream_cipher/stream_cipher-library.html">stream_cipher</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>stream_cipher library</h5>
+    <ol>
+  <li class="section-title"><a href="../stream_cipher/stream_cipher-library.html#classes">Classes</a></li>
+  <li><a href="../stream_cipher/AESByteDataDecrypter-class.html">AESByteDataDecrypter</a></li>
+  <li><a href="../stream_cipher/AESByteDataEncrypter-class.html">AESByteDataEncrypter</a></li>
+  <li><a href="../stream_cipher/Base64ByteDataDecoder-class.html">Base64ByteDataDecoder</a></li>
+  <li><a href="../stream_cipher/Base64ByteDataEncoder-class.html">Base64ByteDataEncoder</a></li>
+  <li><a href="../stream_cipher/EncryptStreamMeta-class.html">EncryptStreamMeta</a></li>
+  <li><a href="../stream_cipher/IByteDataDecrypter-class.html">IByteDataDecrypter</a></li>
+  <li><a href="../stream_cipher/IByteDataEncrypter-class.html">IByteDataEncrypter</a></li>
+  <li><a href="../stream_cipher/MultiLayerDecrypter-class.html">MultiLayerDecrypter</a></li>
+  <li><a href="../stream_cipher/MultiLayerEncrypter-class.html">MultiLayerEncrypter</a></li>
+  <li><a href="../stream_cipher/NoEncryptionByteDataDecrypter-class.html">NoEncryptionByteDataDecrypter</a></li>
+  <li><a href="../stream_cipher/NoEncryptionByteDataEncrypter-class.html">NoEncryptionByteDataEncrypter</a></li>
+  <li><a href="../stream_cipher/RSAByteDataDecrypter-class.html">RSAByteDataDecrypter</a></li>
+  <li><a href="../stream_cipher/RSAByteDataEncrypter-class.html">RSAByteDataEncrypter</a></li>
+
+  <li class="section-title"><a href="../stream_cipher/stream_cipher-library.html#extensions">Extensions</a></li>
+  <li><a href="../stream_cipher/ListBreaker.html">ListBreaker</a></li>
+  <li><a href="../stream_cipher/StreamDecrypter.html">StreamDecrypter</a></li>
+  <li><a href="../stream_cipher/StreamEncryptTools.html">StreamEncryptTools</a></li>
+
+
+
+
+
+
+
+</ol>
+
+  </div><!--/sidebar-offcanvas-right-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    stream_cipher
+      1.1.4
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
