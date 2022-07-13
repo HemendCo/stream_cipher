@@ -56,14 +56,14 @@ class SecureFile {
         ),
         encrypter = useBase64
             ? MultiLayerEncrypter([
-                Base64ByteDataEncoder(),
                 encrypter,
+                Base64ByteDataEncoder(),
               ])
             : encrypter,
         decrypter = useBase64
             ? MultiLayerDecrypter([
-                Base64ByteDataDecoder(),
                 decrypter,
+                Base64ByteDataDecoder(),
               ])
             : decrypter;
 

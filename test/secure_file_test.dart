@@ -25,14 +25,13 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
       }
       final file = File('test/temp/test_file.dat');
 
-      final _aesEncrypter = AESByteDataEncrypter.randomSecureKey();
-      final _aesDecrypter = AESByteDataDecrypter(
-        key: _aesEncrypter.key,
-        iv: _aesEncrypter.iv,
-      );
+      // final _aesEncrypter = AESByteDataEncrypter.randomSecureKey();
+      // final _aesDecrypter = AESByteDataDecrypter(
+      //   key: _aesEncrypter.key,
+      //   iv: _aesEncrypter.iv,
+      // );
       final _rsaEncrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
-      final _rsaDecrypter =
-          RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+      final _rsaDecrypter = RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
 
       final encrypter = MultiLayerEncrypter([
         _rsaEncrypter,
@@ -46,7 +45,7 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
         maxBlockSize: _rsaEncrypter.inputBlocSize,
         encrypter: encrypter,
         decrypter: decrypter,
-        // useBase64: true,
+        useBase64: true,
       );
 
       testData = File('test/_test_file.exe').readAsBytesSync();
