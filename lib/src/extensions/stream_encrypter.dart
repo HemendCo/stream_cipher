@@ -10,6 +10,7 @@ import '../../stream_cipher.dart' //
         ListBreaker;
 
 extension StreamEncryptTools on IByteDataEncrypter {
+  /// alternate source stream of binary data into encrypted stream
   Stream<Uint8List> alterEncryptStream(
     Stream<Uint8List> sourceStream, {
     int maxBlockSize = 1024,
