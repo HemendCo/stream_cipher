@@ -122,7 +122,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
             testResultBuffer
               ..addAll(i)
               ..addAll(
-                slicedData.last != i ? streamMeta.separator.codeUnits : streamMeta.ending.codeUnits,
+                slicedData.last != i
+                    ? streamMeta.separator.codeUnits
+                    : streamMeta.ending.codeUnits,
               );
           }
           final buffer = <int>[];
@@ -265,7 +267,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           final decrypter = _NoEncryptionByteDataDecrypter();
           final encrypted = decrypter.alterDecryptStream(
             Stream.fromIterable(
-              encryptedMessage.sliceToPiecesOfSize(15).map((e) => Uint8List.fromList(e.toList())),
+              encryptedMessage
+                  .sliceToPiecesOfSize(15)
+                  .map((e) => Uint8List.fromList(e.toList())),
             ),
             streamMeta: streamMeta,
           );
@@ -304,7 +308,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(16).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(16)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -329,7 +335,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(1024)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
               useBase64: true,
@@ -352,7 +360,8 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           final decrypter = RSAByteDataDecrypter.fromString(kRSAPrivateKey);
 
           final buffer = <int>[];
-          for (final i in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+          for (final i
+              in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
             final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
             final decrypted = decrypter.decrypt(encrypted);
             buffer.addAll(decrypted);
@@ -363,7 +372,8 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
       test('Encrypt only', () {
         final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicKey);
         final buffer = <int>[];
-        for (final i in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+        for (final i
+            in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
           final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
           buffer.addAll(encrypted);
         }
@@ -379,7 +389,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(encrypter.inputBlocSize).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(encrypter.inputBlocSize)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -396,10 +408,12 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
         'Single-Shot',
         () {
           final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
-          final decrypter = RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+          final decrypter =
+              RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
 
           final buffer = <int>[];
-          for (final i in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+          for (final i
+              in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
             final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
             final decrypted = decrypter.decrypt(encrypted);
             buffer.addAll(decrypted);
@@ -410,7 +424,8 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
       test('Encrypt only', () {
         final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
         final buffer = <int>[];
-        for (final i in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
+        for (final i
+            in testString.sliceToPiecesOfSize(encrypter.inputBlocSize)) {
           final encrypted = encrypter.encrypt(Uint8List.fromList(i.toList()));
           buffer.addAll(encrypted);
         }
@@ -421,12 +436,15 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
         'Stream Alter',
         () async {
           final encrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
-          final decrypter = RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+          final decrypter =
+              RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
           final buffer = <int>[];
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(encrypter.inputBlocSize).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(encrypter.inputBlocSize)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -458,7 +476,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(1024)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -490,7 +510,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(1024).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(1024)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
@@ -534,8 +556,10 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
             key: _aesEncrypter.key,
             iv: _aesEncrypter.iv,
           );
-          final _rsaEncrypter = RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
-          final _rsaDecrypter = RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
+          final _rsaEncrypter =
+              RSAByteDataEncrypter.fromString(kRSAPublicPkcs1Key);
+          final _rsaDecrypter =
+              RSAByteDataDecrypter.fromString(kRSAPrivatePkcs1Key);
 
           final encrypter = MultiLayerEncrypter([
             // GZipByteDataEncoder(),
@@ -551,7 +575,9 @@ m3pCNLNPvd/zSQIQHb9zWGpmoCAtqvof8vputQ==
           await for (final part in decrypter.alterDecryptStream(
             encrypter.alterEncryptStream(
               Stream.fromIterable(
-                testString.sliceToPiecesOfSize(16).map((e) => Uint8List.fromList(e.toList())),
+                testString
+                    .sliceToPiecesOfSize(16)
+                    .map((e) => Uint8List.fromList(e.toList())),
               ),
               streamMeta: streamMeta,
             ),
