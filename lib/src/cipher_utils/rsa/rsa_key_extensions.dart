@@ -14,7 +14,7 @@ import 'package:pointycastle/asn1.dart' //
         ASN1Sequence;
 import 'package:pointycastle/export.dart' show RSAPrivateKey, RSAPublicKey;
 
-import '../../list_extensions.dart';
+import '../../extensions/list_extensions.dart';
 
 abstract class RSAKeyMetaData {
   static const BEGIN_PRIVATE_KEY = '-----BEGIN PRIVATE KEY-----';
