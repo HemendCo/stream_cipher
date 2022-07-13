@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.2.0
+
+- removed `Gzip` de/encoder
+
+- added `Base64` de/encoder
+
+- removed `dart:io` imports from de/encrypters dart file to use for web
+
+- fixed `MultiLayerEncoder`
+
 ## 1.1.4
 
 - added new `IByteEn/Decrypter` called `MultiLayer` that will receive a list of `IByteEn/Decrypter`s and will use them in a chain.
