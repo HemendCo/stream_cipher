@@ -1,12 +1,12 @@
 library stream_cipher.cipher_models;
 
-import 'dart:io' show File, gzip;
+import 'dart:convert' show base64;
 import 'dart:math' show Random;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:pointycastle/asymmetric/rsa.dart' show RSAEngine;
-import 'package:pointycastle/block/aes.dart';
-import 'package:pointycastle/block/modes/cbc.dart';
+import 'package:pointycastle/block/aes.dart' show AESEngine;
+import 'package:pointycastle/block/modes/cbc.dart' show CBCBlockCipher;
 import 'package:pointycastle/pointycastle.dart' //
     show
         KeyParameter,
@@ -15,9 +15,14 @@ import 'package:pointycastle/pointycastle.dart' //
         RSAPublicKey;
 
 import '../stream_cipher.dart' show IByteDataEncrypter;
-import 'cipher_utils/rsa/rsa_key_extensions.dart';
-import 'cipher_utils/rsa/rsa_tools.dart';
+import 'cipher_utils/rsa/rsa_key_extensions.dart' show RSAKeyMetaData;
+import 'cipher_utils/rsa/rsa_tools.dart' show RSAKeyTools;
 
+/// this class will not encrypt/encode anything
+///
+/// the usecases may be as follows:
+///
+/// - sending raw data to network but receiving an encoded/encrypted message
 class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   @override
   Uint8List encrypt(Uint8List data) => data;
@@ -26,6 +31,8 @@ class NoEncryptionByteDataEncrypter extends IByteDataEncrypter {
   String get encryptMethod => 'NONE';
 }
 
+/// an [IByteDataEncrypter] that uses `PointyCastle`'s `CBC/AES` method
+/// to encode data.
 class AESByteDataEncrypter extends IByteDataEncrypter {
   /// AESKey is a key that is used to encrypt and decrypt data.
   ///
@@ -138,19 +145,6 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
     );
   }
 
-  /// loads public key from a file in async mode.
-  static Future<RSAByteDataEncrypter> fromFile(String fileAddress) async {
-    final publicKey = await File(fileAddress).readAsString();
-    return RSAByteDataEncrypter.fromString(publicKey);
-  }
-
-  /// loads public key from a file in sync mode.
-  factory RSAByteDataEncrypter.fromFileSync(String fileAddress) {
-    final file = File(fileAddress);
-    final key = file.readAsStringSync();
-    return RSAByteDataEncrypter.fromString(key);
-  }
-
   /// encrypt method that receives a [Uint8List] and then returns an
   /// encrypted [Uint8List] using RSA.
   @override
@@ -174,21 +168,37 @@ class RSAByteDataEncrypter extends IByteDataEncrypter {
   }
 }
 
-class GZipByteDataEncoder extends IByteDataEncrypter {
+/// simple `Base64` byte data encoder
+class Base64ByteDataEncoder extends IByteDataEncrypter {
   @override
   Uint8List encrypt(Uint8List data) {
-    return Uint8List.fromList(gzip.encoder.convert(data));
+    return Uint8List.fromList(base64.encoder.convert(data).codeUnits);
   }
 
   @override
-  String get encryptMethod => 'GZIP';
+  String get encryptMethod => 'BASE64';
 }
 
+/// [MultiLayerEncrypter] can be used to concat a list of encrypters together
 class MultiLayerEncrypter extends IByteDataEncrypter {
   final List<IByteDataEncrypter> _encrypters;
+
+  /// creating an instance of [MultiLayerEncrypter] with given `encrypters`
+  ///
+  /// **note** : if you are using an `RSA` model or any other methods that
+  /// limits the input size of encrypt method make sure to test this model
   MultiLayerEncrypter(
     List<IByteDataEncrypter> encrypters,
-  ) : _encrypters = encrypters.reversed.toList();
+  ) : _encrypters = encrypters.reversed.toList() {
+    final rsaEncrypters = encrypters.where(
+      (element) => element.encryptMethod == 'RSA',
+    );
+    if (rsaEncrypters.isNotEmpty) {
+      print(
+        'RSA is not ideal in MultiLayerEncrypter and may throw exception',
+      );
+    }
+  }
   @override
   Uint8List encrypt(Uint8List data) {
     var result = data;
