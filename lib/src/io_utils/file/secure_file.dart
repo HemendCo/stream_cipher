@@ -150,8 +150,6 @@ class SecureFile {
   }
 
   /// encrypt and write a list of [String] [data] into the file
-  ///
-  /// **if you are changing [mode] make sure to test it**
   Future<void> writeString(
     String data, {
     int? blockSize,
