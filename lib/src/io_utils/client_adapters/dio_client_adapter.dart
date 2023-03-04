@@ -16,7 +16,7 @@ import '../../../stream_cipher.dart';
 ///
 /// [useBase64] flag will be used to encode data to base64 string before
 /// encoding it to bytes.
-class CipherDioHttpAdapter extends HttpClientAdapter {
+class CipherDioHttpAdapter implements HttpClientAdapter {
   /// [HttpClientAdapter] there will be an instance of this adapter on []
   final HttpClientAdapter _baseAdapter;
 
