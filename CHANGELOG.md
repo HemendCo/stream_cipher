@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.0
+
+- removed secure file append mode (it was unstable)
+- migrated to dio ^5.0.1
+
 ## 1.2.1
 
 - fixed secure file base64
