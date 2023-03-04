@@ -155,14 +155,14 @@ class SecureFile {
   Future<void> writeString(
     String data, {
     int? blockSize,
-    FileMode mode = FileMode.write,
+    // FileMode mode = FileMode.write,
     Encoding encoding = utf8,
   }) async {
     return writeByteArray(
       Uint8List.fromList(data.codeUnits),
       blockSize: blockSize,
       encoding: encoding,
-      mode: mode,
+      mode: FileMode.writeOnly,
     );
   }
 
