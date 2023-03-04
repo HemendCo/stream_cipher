@@ -8,12 +8,14 @@ import 'package:stream_cipher/stream_cipher.dart';
 
 import 'sample_dart_backend.dart';
 
-const kServerPort = 8088;
+const kServerPort = 40881;
+const kMessage =
+    '''{"note":"ممد اینجاس","extras":"Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui.Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui.Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui.Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui.Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui.Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui.Enim aliquip adipisicing cillum. Enim laborum sint ad duis consequat sunt ad tempor laborum voluptate ea enim reprehenderit consequat eiusmod. Eu sit culpa ipsum irure occaecat tempor do. Culpa aute do ipsum elit esse est consequat in aliqua ea consequat ut excepteur in. Ex nulla exercitation labore cupidatat Lorem exercitation pariatur dolore dolor.Sit est irure cillum esse est pariatur dolor quis exercitation ullamco ea. Est labore officia incididunt ipsum sunt ullamco ea cillum ad exercitation occaecat sit adipisicing. Et exercitation veniam magna cupidatat quis culpa ut tempor. Ea sint ullamco consectetur do laboris pariatur cupidatat anim cillum ipsum aliqua consequat velit nostrud. Irure aliquip adipisicing culpa dolore. Cupidatat aliqua voluptate aliqua exercitation sit commodo esse in id duis cupidatat veniam laboris occaecat incididunt. Anim officia ullamco cupidatat elit consectetur dolor adipisicing dolore duis consequat in sint qui."}''';
 // const kRawEchoApiUrl = 'http://0.0.0.0:3000/example/echo_server.php';
-const kDecodedEchoAPIUrl = 'http://0.0.0.0:$kServerPort/decoded_echo';
-const kRawEchoApiUrl = 'http://0.0.0.0:$kServerPort/raw_echo';
-const kMiddleEchoApiUrl = 'http://0.0.0.0:$kServerPort/middle_cipher';
-const kMaxPartSize = 35;
+const kDecodedEchoAPIUrl = 'http://127.0.0.1:$kServerPort/decoded_echo';
+const kRawEchoApiUrl = 'http://127.0.0.1:$kServerPort/raw_echo';
+const kMiddleEchoApiUrl = 'http://127.0.0.1:$kServerPort/middle_cipher';
+const kMaxPartSize = 600;
 final logger = Logger();
 Future<void> main() async {
   final server = await dartBackEnd();
@@ -42,22 +44,16 @@ Culpa do labore id. Ex ea sunt veniam. Occaecat Lorem occaecat culpa laboris fug
     encrypter: encrypter,
     decrypter: decrypter,
     // streamMeta: streamMeta,
-    useBase64: true,
+    useBase64: false,
     maxBlockSize: kMaxPartSize,
   );
-  await secureFile.writeString(testData, mode: FileMode.append);
+  await secureFile.writeString(
+    testData,
+  );
   final readData = await secureFile.readString();
-  var tryCount = 0;
-  while (true) {
-    tryCount++;
-    if (readData == testData * tryCount) {
-      break;
-    }
-    // tryCount++;
-  }
 
   logger.i(
-    'File adapter test isValid: ${readData == testData}',
+    'read value: $readData',
     null,
     StackTrace.fromString('DartExample'),
   );
@@ -76,7 +72,7 @@ Future<void> rrrr() async {
   await dio
       .post(
     kRawEchoApiUrl,
-    data: '{"note":"this will be encrypted"}',
+    data: kMessage,
   )
       .then((response) {
     logger.i(
@@ -100,7 +96,7 @@ Future<void> errr() async {
   await dio
       .post(
     kRawEchoApiUrl,
-    data: '{"note":"this will be encrypted"}',
+    data: kMessage,
   )
       .then((response) {
     logger.i(
@@ -124,7 +120,7 @@ Future<void> erdr() async {
   await dio
       .post(
     kRawEchoApiUrl,
-    data: '{"note":"this will be encrypted"}',
+    data: kMessage,
   )
       .then((response) {
     logger.i(
@@ -148,7 +144,7 @@ Future<void> erdr2() async {
 
   final response = await dio.post(
     kDecodedEchoAPIUrl,
-    data: '{"note":"this will be encrypted"}',
+    data: kMessage,
   );
   logger.i(
     'Encrypted request -> decrypted in backend: ${response.data}',
@@ -170,7 +166,7 @@ Future<void> erdr3() async {
 
   final response = await dio.post(
     kMiddleEchoApiUrl,
-    data: '{"note":"this will be encrypted"}',
+    data: kMessage,
   );
   logger.i(
     'Encrypted request -> decrypted in backend (MiddleWare): ${response.data}',
